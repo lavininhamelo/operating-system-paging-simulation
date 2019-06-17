@@ -1,11 +1,9 @@
 package Software;
 
-import Software.Schedulers.FCFSScheduler;
 import Hardware.Memory;
 import Hardware.Disk;
 
-import Software.Notification.MonitorDispatcherSwapper;
-import Software.Notification.MonitorFCFSSwapper;
+import Software.Notification.MonitorDispatcherPager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,17 +11,7 @@ import java.util.Date;
 /**
  * Responsável por alocar os processos na memória.
  */
-public class Swapper extends Thread implements Runnable {
-
-	/**
-	 * Comunicação com o FCFSScheduler.
-	 */
-	private static FCFSScheduler fCFSScheduler;
-
-	/**
-	 * Comunicação com o Dispatcher.
-	 */
-	private Dispatcher dispatcher;
+public class Pager extends Thread implements Runnable {
 
 	/**
 	 * Comunicação com a Memória.
@@ -46,24 +34,17 @@ public class Swapper extends Thread implements Runnable {
 	private Process requestForTransferOfProcess;
 
 	/**
-	 * Monitor entre FCFSScheduler e Swapper.
-	 */
-	private MonitorFCFSSwapper monitorFCFS;
-
-	/**
 	 * Monitor entre Dispatcher e Swapper.
 	 */
-	private MonitorDispatcherSwapper monitorDispatcherSwapper;
+	private MonitorDispatcherPager monitorDispatcherPager;
 
 	/**
 	 * Monitoramento de status do RoundRobinScheduler.
 	 */
 	private String statusRoundRobinScheduler;
 
-	public Swapper(FCFSScheduler fCFSScheduler, MonitorFCFSSwapper monitorFCFS, MonitorDispatcherSwapper monitorDispatcherSwapper) {
-		this.fCFSScheduler = fCFSScheduler;
-		this.monitorFCFS = monitorFCFS;
-		this.monitorDispatcherSwapper = monitorDispatcherSwapper;
+	public Pager(MonitorDispatcherPager monitorDispatcherPager) {
+		this.monitorDispatcherPager = monitorDispatcherPager;
 		this.statusRoundRobinScheduler = "";
 	}
 
@@ -104,48 +85,23 @@ public class Swapper extends Thread implements Runnable {
 		disk.writeInMemory(requestForTransferOfProcess.getId());
 
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Swapper traz processo " + requestForTransferOfProcess.getId()
+				+ ".	Pager traz processo " + requestForTransferOfProcess.getId()
 				+ " do disco e o coloca na memória");
 	}
-
-	/**
-	 * Solicita transferência de processos da memória para o disco até que haja espaço suficiente para alocação.
-	 *
-	private void freeUpMemorySpace(int tp) {
-
-	}*/
-
-	/**
-	 * Notifica ao scheduler que processo foi alocado na memória.
-	 */
-	private void notifyScheduler() {
-
-		synchronized(monitorFCFS) {
-
-			monitorFCFS.notify();
-
-		}
-
-		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Swapper avisa o Escalonador FCFS de longo prazo que o processo " + process.getId()
-				+ " está na memória");
-
-	}
-
 
 	/**
 	 * Notifica ao dispatcher que processo foi transferido do disco para a memória.
 	 */
 	private void notifyDispatcher() {
 
-		synchronized (monitorDispatcherSwapper) {
+		synchronized (monitorDispatcherPager) {
 
-			monitorDispatcherSwapper.notify();
+			monitorDispatcherPager.notify();
 
 		}
 
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Swapper avisa o Despachante que o processo " + requestForTransferOfProcess.getId()
+				+ ".	Pager avisa o Despachante que o processo " + requestForTransferOfProcess.getId()
 				+ " está na memória");
 
 	}
@@ -166,7 +122,6 @@ public class Swapper extends Thread implements Runnable {
 			if (process != null) {
 
 				putProcessInToMemory(process);
-				notifyScheduler();
 				process = null;
 
 			}

@@ -1,6 +1,7 @@
 package Software;
 
 import Software.Buffers.InputBuffer;
+import Software.Buffers.ReadyBuffer;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,6 +18,12 @@ public class ProcessCreator extends Thread {
 	 * Comunicação com o InputBuffer.
 	 */
 	private static InputBuffer inputBuffer;
+
+
+	/**
+	 * Comunicação com o ReadyBuffer.
+	 */
+	private static ReadyBuffer readyBuffer;
 
 	/**
 	 * Comunicação com o Process.
@@ -35,21 +42,22 @@ public class ProcessCreator extends Thread {
 
 	public ProcessCreator(Collection<Process> vector) {
 
-		inputBuffer = new InputBuffer();
+		// inputBuffer = new InputBuffer();
+		readyBuffer = new ReadyBuffer();
 		this.processosParaCriar = vector;
 		this.processosCriados = new Vector<>();
 
 	}
 
 	/**
-	 * Inicializa novas intancias de objeto e adiciona no inputBuffer.
+	 * Inicializa novas intancias de objeto e adiciona no ReadyBuffer.
 	 */
 	public void createProcess(Process process) {
-		inputBuffer.addProcess(process);
+		readyBuffer.add(process);
 
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
 				+ ".	Criador de processos criou o processo " + process.getId()
-				+ " e o colocou na fila de entrada");
+				+ " e o colocou na fila de prontos");
 
 		processosCriados.add(process);
 	}

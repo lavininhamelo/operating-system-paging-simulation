@@ -2,11 +2,9 @@ package Software;
 
 public class Notification {
 
-    public static class MonitorDispatcherSwapper {}
+    public static class MonitorDispatcherPager {}
 
     public static class MonitorDispatcherTimer {}
-
-    public static class MonitorFCFSSwapper {}
 
     public static class MonitorRoundRobinDispatcher {}
 

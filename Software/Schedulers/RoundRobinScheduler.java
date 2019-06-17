@@ -54,14 +54,14 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 	/**
 	 * Monitoramento de status do FCFSCheduler.
 	 */
-	private String statusFCFSScheduler;
+	private String statusProcess;
 
 	public RoundRobinScheduler(int tq, MonitorRoundRobinDispatcher monitorDispatcher, MonitorRoundRobinTimer monitorTimer) {
 		this.tq = tq;
 		readyBuffer = new ReadyBuffer();
 		this.monitorDispatcher = monitorDispatcher;
 		this.monitorTimer = monitorTimer;
-		statusFCFSScheduler = "";
+		statusProcess = "";
 	}
 	
 	public void setDispatcher(Dispatcher dispatcher){
@@ -84,8 +84,8 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 		return process;
 	}
 
-	public void setStatusFCFSScheduler(String statusFCFSScheduler) {
-		this.statusFCFSScheduler = statusFCFSScheduler;
+	public void setStatusProcess(String statusProcess) {
+		this.statusProcess = statusProcess;
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 	 */
 	public void run() {
 
-		while (!statusFCFSScheduler.equals("concluded") || readyBuffer.size() > 0 || !(process == null)) {
+		while (!statusProcess.equals("concluded") || readyBuffer.size() > 0 || !(process == null)) {
 
 			chooseProcess();
 

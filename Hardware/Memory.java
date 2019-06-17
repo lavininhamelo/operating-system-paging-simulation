@@ -18,6 +18,11 @@ public class Memory extends Vector<Process>{
 	private static int tmp;
 
 	/**
+	 * Tamanho da memória.
+	 */
+	private static int nframes;
+
+	/**
 	 * Tamanho ocupado pelos processos.
 	 * 
 	 */
@@ -40,6 +45,7 @@ public class Memory extends Vector<Process>{
 
 	public Memory(int tmp) {
 		this.tmp = tmp;
+		this.nframes = nframes;
 		this.storage = new Vector<>();
 		this.storage.add(new Partition(1, tmp));
 	}

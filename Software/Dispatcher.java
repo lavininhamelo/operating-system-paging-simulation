@@ -4,7 +4,7 @@ import Software.Schedulers.RoundRobinScheduler;
 import Hardware.CPU;
 import Hardware.Memory;
 
-import Software.Notification.MonitorDispatcherSwapper;
+import Software.Notification.MonitorDispatcherPager;
 import Software.Notification.MonitorRoundRobinDispatcher;
 import Software.Notification.MonitorDispatcherTimer;
 
@@ -22,9 +22,9 @@ public class Dispatcher extends Thread {
 	private RoundRobinScheduler roundRobinScheduler;
 
 	/**
-	 * Comunicação com o Swapper.
+	 * Comunicação com o Pager.
 	 */
-	private Swapper swapper;
+	private Pager pager;
 
 	/**
 	 * Comunicação com o Timer.
@@ -57,21 +57,20 @@ public class Dispatcher extends Thread {
 	private MonitorDispatcherTimer monitorTimer;
 
 	/**
-	 * Monitor entre Dispatcher e Swapper.
+	 * Monitor entre Dispatcher e Pager.
 	 */
-	private MonitorDispatcherSwapper monitorSwapper;
+	private MonitorDispatcherPager monitorPager;
 
 	/**
 	 * Monitoramento de status do Criador de Processos.
 	 */
 	private String statusRoundRobinScheduler;
 
-	public Dispatcher(RoundRobinScheduler roundRobinScheduler, MonitorRoundRobinDispatcher monitorRoundRobin, MonitorDispatcherTimer monitorTimer, MonitorDispatcherSwapper monitorSwapper) {
-		
+	public Dispatcher(RoundRobinScheduler roundRobinScheduler, MonitorRoundRobinDispatcher monitorRoundRobin, MonitorDispatcherTimer monitorTimer, MonitorDispatcherPager monitorPager) {
 		this.roundRobinScheduler = roundRobinScheduler;
 		this.monitorRoundRobin = monitorRoundRobin;
 		this.monitorTimer = monitorTimer;
-		this.monitorSwapper = monitorSwapper;
+		this.monitorPager = monitorPager;
 		this.statusRoundRobinScheduler = "";
 
 	}
@@ -92,8 +91,8 @@ public class Dispatcher extends Thread {
 		this.timer = timer;
 	}
 
-	public void setSwapper(Swapper swapper) {
-		this.swapper = swapper;
+	public void setPager(Pager pager) {
+		this.pager = pager;
 	}
 
 	public void setStatusRoundRobinScheduler(String statusRoundRobinScheduler) {
@@ -105,7 +104,7 @@ public class Dispatcher extends Thread {
 	 * 
 	 * Fluxo condicional (processo na memória) :
 	 * 
-	 * 	- (false) Se o processo nao estiver na memória, o Dispatcher solicita ao Swapper a transferência do processo do disco para a memória - requestTransferToMenory(idProcess);
+	 * 	- (false) Se o processo nao estiver na memória, o Dispatcher solicita ao Pager a transferência do processo do disco para a memória - requestTransferToMenory(idProcess);
 	 * 
 	 * 	- (true) Se o processo estiver na memória, o Dispatcher libera a CPU - freeUpCPU().
 	 *
@@ -130,7 +129,7 @@ public class Dispatcher extends Thread {
 
 			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
 					+ ".	Despachante percebe que o processo " + process.getId()
-					+ " está no disco e solicita que o Swapper traga " + process.getId() + " à memória");
+					+ " está no disco e solicita que o Pager traga " + process.getId() + " à memória");
 
 			requestTransferToMemory(process);
 
@@ -139,16 +138,16 @@ public class Dispatcher extends Thread {
 	}
 
 	/**
-	 * Solicita ao Swapper a transferência de processo do disco para a memória.
+	 * Solicita ao Pager a transferência de processo do disco para a memória.
 	 */
 	public void requestTransferToMemory(Process process) {
 
-		swapper.setRequestForTransferOfProcess(process);
+		pager.setRequestForTransferOfProcess(process);
 
-		synchronized (monitorSwapper) {
+		synchronized (monitorPager) {
 
 			try {
-				monitorSwapper.wait();
+				monitorPager.wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -156,7 +155,7 @@ public class Dispatcher extends Thread {
 		}
 
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Despachante é avisado pelo Swapper que o processo " + process.getId()
+				+ ".	Despachante é avisado pelo Pager que o processo " + process.getId()
 				+ " está na memória");
 
 		dispatchProcess();
@@ -219,7 +218,7 @@ public class Dispatcher extends Thread {
 		}
 
 		timer.setStatusRoundRobinScheduler("concluded");
-		swapper.setStatusRoundRobinScheduler("concluded");
+		pager.setStatusRoundRobinScheduler("concluded");
 		notifyTimer();
 
 	}

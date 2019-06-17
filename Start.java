@@ -59,32 +59,34 @@ public class Start {
 
 		// --------------------- Capturando configuraçoes gerais ---------------------
 
-		int tamanhoDaMemoria,
+		int seed,
+				numeroDeFrames,
 				numeroDeProcessos,
 				timeQuantum;
 
-		tamanhoDaMemoria = Integer.parseInt(args[0]);
-		numeroDeProcessos = Integer.parseInt(args[1]);
-		timeQuantum = Integer.parseInt(args[2]);
+		seed = Integer.parseInt(args[0]);
+		numeroDeFrames = Integer.parseInt(args[1]);
+		numeroDeProcessos = Integer.parseInt(args[2]);
+		timeQuantum = Integer.parseInt(args[3]);
 
 
 		// --------------------- Capturando processos ---------------------
 
 		int identificacaoProcesso,
-				tempoDoProcesso,
+				numeroDePaginas,
 				tempoDeChegada,
 				tempoDeBurst;
 
-		int args_count = 3;
+		int args_count = 4;
 		Collection<Process> processos  = new Vector<>();
 		while (numeroDeProcessos > 0) {
 
 			identificacaoProcesso = Integer.parseInt(args[args_count++]);
-			tempoDoProcesso = Integer.parseInt(args[args_count++]);
+			numeroDePaginas = Integer.parseInt(args[args_count++]);
 			tempoDeChegada = Integer.parseInt(args[args_count++]);
 			tempoDeBurst = Integer.parseInt(args[args_count++]);
 
-			Process processo = new Process(identificacaoProcesso, tempoDoProcesso, tempoDeChegada, tempoDeBurst);
+			Process processo = new Process(identificacaoProcesso, numeroDePaginas, tempoDeChegada, tempoDeBurst);
 			processos.add(processo);
 
 			numeroDeProcessos--;
@@ -104,7 +106,7 @@ public class Start {
 		// --------------------- Inicializando componentes ---------------------
 
 		cPU = new CPU();
-		memory = new Memory(tamanhoDaMemoria);
+		memory = new Memory(seed);
 		disk = new Disk();
 
 		fCFSScheduler = new FCFSScheduler(monitorFS);
@@ -145,7 +147,7 @@ public class Start {
 				+ ".	Início da observação");
 
 		dispatcher.start();
-		fCFSScheduler.start();
+		// fCFSScheduler.start();
 		processCreator.start();
 		roundRobinScheduler.start();
 		swapper.start();
@@ -157,10 +159,7 @@ public class Start {
 		try {
 
 			processCreator.join();
-			fCFSScheduler.setStatusProcessCreator("concluded");
-
-			fCFSScheduler.join();
-			roundRobinScheduler.setStatusFCFSScheduler("concluded");
+			roundRobinScheduler.setStatusProcess("concluded");
 
 			dispatcher.join();
 			roundRobinScheduler.join();

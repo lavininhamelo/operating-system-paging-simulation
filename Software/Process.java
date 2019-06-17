@@ -25,6 +25,11 @@ public class Process {
 	 */
 	private int tb;
 
+	/**
+	 * Identificação da tabela de páginas.
+	 */
+	private int pageTableId;
+
 	public Process(int id, int tp, int tc, int tb) {
 		this.id = id;
 		this.tp = tp;
