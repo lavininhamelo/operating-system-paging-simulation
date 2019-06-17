@@ -47,6 +47,11 @@ public class Dispatcher extends Thread {
 	private Process process;
 
 	/**
+	 * Seed para a selecionar a página do processo.
+	 */
+	private int seed;
+
+	/**
 	 * Monitor entre RoundRobinScheduler e Dispatcher.
 	 */
 	private MonitorRoundRobinDispatcher monitorRoundRobin;
@@ -66,7 +71,10 @@ public class Dispatcher extends Thread {
 	 */
 	private String statusRoundRobinScheduler;
 
-	public Dispatcher(RoundRobinScheduler roundRobinScheduler, MonitorRoundRobinDispatcher monitorRoundRobin, MonitorDispatcherTimer monitorTimer, MonitorDispatcherPager monitorPager) {
+	public Dispatcher(int seed, RoundRobinScheduler roundRobinScheduler, 
+		MonitorRoundRobinDispatcher monitorRoundRobin, MonitorDispatcherTimer monitorTimer, 
+		MonitorDispatcherPager monitorPager) {
+		this.seed = seed;
 		this.roundRobinScheduler = roundRobinScheduler;
 		this.monitorRoundRobin = monitorRoundRobin;
 		this.monitorTimer = monitorTimer;
@@ -160,6 +168,14 @@ public class Dispatcher extends Thread {
 
 		dispatchProcess();
 
+	}
+
+	/**
+	 * Calcula uma página aleatória do processo.
+	 */
+	public int chooseProcessPage(Process process) {
+		int range = (process.getNp() - 1) + 1;
+		return this.seed % ((int) (Math.random() * range)) +1;
 	}
 
 	/**

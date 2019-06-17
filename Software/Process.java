@@ -13,7 +13,7 @@ public class Process {
 	/**
 	 * Tamanho do processo.
 	 */
-	private int tp;
+	private int np;
 
 	/**
 	 * Tempo de chegada na fila de entrada.
@@ -30,9 +30,9 @@ public class Process {
 	 */
 	private int pageTableId;
 
-	public Process(int id, int tp, int tc, int tb) {
+	public Process(int id, int np, int tc, int tb) {
 		this.id = id;
-		this.tp = tp;
+		this.np = np;
 		this.tc = tc;
 		this.tb = tb;
 	}
@@ -45,12 +45,12 @@ public class Process {
 		return id;
 	}
 
-	public void setTp(int tp) {
-		this.tp = tp;
+	public void setNp(int np) {
+		this.np = np;
 	}
 
-	public int getTp() {
-		return tp;
+	public int getNp() {
+		return np;
 	}
 
 	public void setTc(int tc) {

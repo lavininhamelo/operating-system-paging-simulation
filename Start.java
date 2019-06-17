@@ -18,14 +18,12 @@ import Software.Dispatcher;
 import Software.Notification;
 import Software.Process;
 import Software.ProcessCreator;
-import Software.Schedulers.FCFSScheduler;
 import Software.Schedulers.RoundRobinScheduler;
 import Software.Timer;
-import Software.Swapper;
+import Software.Pager;
 
-import Software.Notification.MonitorDispatcherSwapper;
+import Software.Notification.MonitorDispatcherPager;
 import Software.Notification.MonitorDispatcherTimer;
-import Software.Notification.MonitorFCFSSwapper;
 import Software.Notification.MonitorRoundRobinDispatcher;
 import Software.Notification.MonitorRoundRobinTimer;
 
@@ -37,17 +35,15 @@ import java.util.Vector;
 
 public class Start {
 
-	private static FCFSScheduler fCFSScheduler;
 	private static RoundRobinScheduler roundRobinScheduler;
 
 	private static Dispatcher dispatcher;
 	private static ProcessCreator processCreator;
-	private static Swapper swapper;
+	private static Pager pager;
 	private static Timer timer;
 
-	private static MonitorDispatcherSwapper monitorDS;
+	private static MonitorDispatcherPager monitorDP;
 	private static MonitorDispatcherTimer monitorDT;
-	private static MonitorFCFSSwapper monitorFS;
 	private static MonitorRoundRobinDispatcher monitorRD;
 	private static MonitorRoundRobinTimer monitorRT;
 
@@ -96,9 +92,8 @@ public class Start {
 
 		// --------------------- Inicializando monitores ---------------------
 
-		monitorDS = new MonitorDispatcherSwapper();
+		monitorDP = new MonitorDispatcherPager();
 		monitorDT = new Notification.MonitorDispatcherTimer();
-		monitorFS = new MonitorFCFSSwapper();
 		monitorRD = new MonitorRoundRobinDispatcher();
 		monitorRT = new MonitorRoundRobinTimer();
 
@@ -109,12 +104,11 @@ public class Start {
 		memory = new Memory(seed);
 		disk = new Disk();
 
-		fCFSScheduler = new FCFSScheduler(monitorFS);
 		roundRobinScheduler = new RoundRobinScheduler(timeQuantum, monitorRD, monitorRT);
 
-		dispatcher = new Dispatcher(roundRobinScheduler, monitorRD, monitorDT, monitorDS);
+		dispatcher = new Dispatcher(seed, roundRobinScheduler, monitorRD, monitorDT, monitorDP);
 		processCreator = new ProcessCreator(processos);
-		swapper = new Swapper(fCFSScheduler, monitorFS, monitorDS);
+		pager = new Pager(monitorDP);
 		timer = new Timer(roundRobinScheduler, monitorRT, monitorDT);
 
 
@@ -127,15 +121,14 @@ public class Start {
 		roundRobinScheduler.setDispatcher(dispatcher);
 		roundRobinScheduler.setTimer(timer);
 
-		fCFSScheduler.setSwapper(swapper);
 
 		dispatcher.setcPU(cPU);
 		dispatcher.setMemory(memory);
-		dispatcher.setSwapper(swapper);
+		dispatcher.setPager(pager);
 		dispatcher.setTimer(timer);
 
-		swapper.setDisk(disk);
-		swapper.setMemory(memory);
+		pager.setDisk(disk);
+		pager.setMemory(memory);
 
 		timer.setcPU(cPU);
 		timer.setDispatcher(dispatcher);
@@ -147,10 +140,9 @@ public class Start {
 				+ ".	Início da observação");
 
 		dispatcher.start();
-		// fCFSScheduler.start();
 		processCreator.start();
 		roundRobinScheduler.start();
-		swapper.start();
+		pager.start();
 		timer.start();
 
 
@@ -163,7 +155,7 @@ public class Start {
 
 			dispatcher.join();
 			roundRobinScheduler.join();
-			swapper.join();
+			pager.join();
 			timer.join();
 
         } catch (InterruptedException e) {
