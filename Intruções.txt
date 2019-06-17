@@ -1,0 +1,20 @@
+Alunos:
+
+Bianca Ferreira da Frota Barreto - 2017.1906.053-3
+Gabriel Cansanção da Silva Monteiro - 2017.1906.071-1
+Lavinia da Silva Costa Melo - 2017.1906.056-8
+
+
+Instruções:
+
+- compilar a classe Start.java
+- executá-la com os seguintes argumentos:
+  - tamanho da memória;
+  - número de processos;
+  - time quantum;
+  
+  Para cada processo (definido no número de processos), passar:
+  - id do processo;
+  - tempo do processo;
+  - tempo de chegada;
+  - tempo de burst.
