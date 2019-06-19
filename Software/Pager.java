@@ -43,6 +43,8 @@ public class Pager extends Thread implements Runnable {
 	 */
 	private String statusRoundRobinScheduler;
 
+	private int fault;
+
 	public Pager(MonitorDispatcherPager monitorDispatcherPager) {
 		this.monitorDispatcherPager = monitorDispatcherPager;
 		this.statusRoundRobinScheduler = "";
@@ -64,6 +66,7 @@ public class Pager extends Thread implements Runnable {
 		this.process = process;
 	}
 
+	// Pegar página do processo
 	public void setRequestForTransferOfProcess(Process requestForTransferOfProcess) {
 		this.requestForTransferOfProcess = requestForTransferOfProcess;
 	}
@@ -84,9 +87,8 @@ public class Pager extends Thread implements Runnable {
 
 		disk.writeInMemory(requestForTransferOfProcess.getId());
 
-		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Pager traz processo " + requestForTransferOfProcess.getId()
-				+ " do disco e o coloca na memória");
+		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager traz processo "
+				+ requestForTransferOfProcess.getId() + " do disco e o coloca na memória");
 	}
 
 	/**
@@ -100,10 +102,14 @@ public class Pager extends Thread implements Runnable {
 
 		}
 
-		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Pager avisa o Despachante que o processo " + requestForTransferOfProcess.getId()
-				+ " está na memória");
+		System.out.println(
+				new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager avisa o Despachante que o processo "
+						+ requestForTransferOfProcess.getId() + " está na memória");
 
+	}
+
+	public int contFault() {
+		return this.fault++;
 	}
 
 	@Override

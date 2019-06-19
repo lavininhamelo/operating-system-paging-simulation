@@ -47,6 +47,11 @@ public class Dispatcher extends Thread {
 	private Process process;
 
 	/**
+	 * Página do processo escolhida.
+	 */
+	private Page page;
+
+	/**
 	 * Seed para a selecionar a página do processo.
 	 */
 	private int seed;
@@ -71,9 +76,8 @@ public class Dispatcher extends Thread {
 	 */
 	private String statusRoundRobinScheduler;
 
-	public Dispatcher(int seed, RoundRobinScheduler roundRobinScheduler, 
-		MonitorRoundRobinDispatcher monitorRoundRobin, MonitorDispatcherTimer monitorTimer, 
-		MonitorDispatcherPager monitorPager) {
+	public Dispatcher(int seed, RoundRobinScheduler roundRobinScheduler, MonitorRoundRobinDispatcher monitorRoundRobin,
+			MonitorDispatcherTimer monitorTimer, MonitorDispatcherPager monitorPager) {
 		this.seed = seed;
 		this.roundRobinScheduler = roundRobinScheduler;
 		this.monitorRoundRobin = monitorRoundRobin;
@@ -112,24 +116,30 @@ public class Dispatcher extends Thread {
 	 * 
 	 * Fluxo condicional (processo na memória) :
 	 * 
-	 * 	- (false) Se o processo nao estiver na memória, o Dispatcher solicita ao Pager a transferência do processo do disco para a memória - requestTransferToMenory(idProcess);
+	 * - (false) Se o processo nao estiver na memória, o Dispatcher solicita ao
+	 * Pager a transferência do processo do disco para a memória -
+	 * requestTransferToMenory(idProcess);
 	 * 
-	 * 	- (true) Se o processo estiver na memória, o Dispatcher libera a CPU - freeUpCPU().
+	 * - (true) Se o processo estiver na memória, o Dispatcher libera a CPU -
+	 * freeUpCPU().
 	 *
 	 */
 	public void dispatchProcess() {
 
-		if (memory.contains(process)) {
+		this.page = process.getPageById(this.chooseProcessPage(process));
 
-			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-					+ ".	Despachante percebe que o processo " + process.getId()
-					+ " está na memória");
+		// Verifica se a página do processo está na memória.
+		if (memory.contains(page)) {
+
+			System.out.println(
+					new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Despachante percebe que a pagina "
+							+ page.getId() + " do processo " + process.getId() + " está na memória");
 
 			freeUpCPU();
 
-			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-					+ ".	Despachante reiniciou o Timer com " + roundRobinScheduler.getTq()
-					+ " e liberou a CPU ao processo " + process.getId());
+			System.out.println(
+					new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Despachante reiniciou o Timer com "
+							+ roundRobinScheduler.getTq() + " e liberou a CPU ao processo " + process.getId());
 
 		}
 
@@ -163,8 +173,7 @@ public class Dispatcher extends Thread {
 		}
 
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Despachante é avisado pelo Pager que o processo " + process.getId()
-				+ " está na memória");
+				+ ".	Despachante é avisado pelo Pager que o processo " + process.getId() + " está na memória");
 
 		dispatchProcess();
 
@@ -175,11 +184,12 @@ public class Dispatcher extends Thread {
 	 */
 	public int chooseProcessPage(Process process) {
 		int range = (process.getNp() - 1) + 1;
-		return this.seed % ((int) (Math.random() * range)) +1;
+		return this.seed % ((int) (Math.random() * range));
 	}
 
 	/**
-	 * Reinicia o Timer e libera a CPU passando a identificação do próximo processo à CPU.
+	 * Reinicia o Timer e libera a CPU passando a identificação do próximo processo
+	 * à CPU.
 	 */
 	private void freeUpCPU() {
 
@@ -193,7 +203,7 @@ public class Dispatcher extends Thread {
 	 */
 	private void notifyTimer() {
 
-		synchronized(monitorTimer) {
+		synchronized (monitorTimer) {
 
 			monitorTimer.notify();
 
@@ -206,7 +216,7 @@ public class Dispatcher extends Thread {
 
 		while (!statusRoundRobinScheduler.equals("concluded")) {
 
-			synchronized(monitorRoundRobin) {
+			synchronized (monitorRoundRobin) {
 
 				try {
 					monitorRoundRobin.wait();

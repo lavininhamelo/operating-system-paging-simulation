@@ -1,7 +1,5 @@
 package Software;
 
-import Software.Process;
-
 /**
  * Frames da memória
  */
@@ -10,15 +8,14 @@ public class Frame {
   /**
    * Identificação.
    */
-  private int id;
-  
-  /**
-   * Identificação.
-   */
-  private boolean validInvalidBit;
+  private int idFrame;
 
-  public Frame() {
-    this.validInvalidBit = false;
+  public Frame(int idFrame) {
+    this.idFrame = idFrame;
+  }
+
+  public int getId() {
+    return idFrame;
   }
 
 }

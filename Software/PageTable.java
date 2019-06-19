@@ -1,6 +1,6 @@
 package Software;
 
-import Software.Process;
+import java.util.Vector;
 
 /**
  * Pages do Processo
@@ -13,19 +13,23 @@ public class PageTable {
   private int pageId;
 
   /**
-   * Identificação.
+   * Identificação da página.
    */
-  private boolean validInvalidBit;
+  private Vector<FramePageTable> framePageTable;
 
   /**
-   * Identificação.
+   * Contador para percorrer os Frames.
    */
-  private boolean referenceBit;
+  private int count;
 
   public PageTable(int pageId, int referenceBit) {
     this.pageId = pageId;
-    this.validInvalidBit = false;
-    this.referenceBit = false;
+    this.framePageTable = new Vector<FramePageTable>();
+    this.count = 0;
+
+    for (int i = 0; i < np; i++) {
+      framePageTable.add(new FramePageTable(i, id));
+    }
   }
 
 }

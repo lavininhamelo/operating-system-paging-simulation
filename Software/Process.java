@@ -1,5 +1,7 @@
 package Software;
 
+import java.util.Vector;
+
 /**
  * Processo.
  */
@@ -11,7 +13,7 @@ public class Process {
 	private int id;
 
 	/**
-	 * Tamanho do processo.
+	 * Numero de Paginas.
 	 */
 	private int np;
 
@@ -29,12 +31,21 @@ public class Process {
 	 * Identificação da tabela de páginas.
 	 */
 	private int pageTableId;
+	/**
+	 * Identificação da tabela de páginas.
+	 */
+	private Vector<Page> paginas;
 
 	public Process(int id, int np, int tc, int tb) {
 		this.id = id;
 		this.np = np;
 		this.tc = tc;
 		this.tb = tb;
+		this.paginas = new Vector<Page>();
+
+		for (int i = 0; i < np; i++) {
+			paginas.add(new Page(i, id));
+		}
 	}
 
 	public void setId(int id) {
@@ -67,6 +78,11 @@ public class Process {
 
 	public int getTb() {
 		return tb;
+	}
+
+	public Page getPageById(int id) {
+		
+		return this
 	}
 
 }
