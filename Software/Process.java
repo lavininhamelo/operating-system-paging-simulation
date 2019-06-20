@@ -34,6 +34,10 @@ public class Process {
 	/**
 	 * Identificação da tabela de páginas.
 	 */
+	private PageTable pageTable;
+	/**
+	 * Vetor de Paginas
+	 */
 	private Vector<Page> paginas;
 
 	public Process(int id, int np, int tc, int tb) {
@@ -53,7 +57,7 @@ public class Process {
 	}
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setNp(int np) {
@@ -61,7 +65,7 @@ public class Process {
 	}
 
 	public int getNp() {
-		return np;
+		return this.np;
 	}
 
 	public void setTc(int tc) {
@@ -69,7 +73,7 @@ public class Process {
 	}
 
 	public int getTc() {
-		return tc;
+		return this.tc;
 	}
 
 	public void setTb(int tb) {
@@ -77,12 +81,31 @@ public class Process {
 	}
 
 	public int getTb() {
-		return tb;
+		return this.tb;
 	}
 
 	public Page getPageById(int id) {
-		
-		return this
+		Page p = new Page();
+		for (Page a : paginas) {
+			if (a.getId() == id) {
+				p = a;
+			}
+		}
+		return p;
+	}
+
+	public int getIdFrame(int idPage) {
+		return 0;
+	}
+
+	public boolean isPageValid(Page page) {
+
+		if (page.getId() == pageTable.getPageId()) {
+			System.out.println("Oi");
+		}
+
+		return false;
+
 	}
 
 }

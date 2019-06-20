@@ -10,6 +10,7 @@ import Software.Notification.MonitorDispatcherTimer;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 /**
  * Responsável por alocar o processo selecionado pelo scheduler na CPU.
@@ -128,8 +129,8 @@ public class Dispatcher extends Thread {
 
 		this.page = process.getPageById(this.chooseProcessPage(process));
 
-		// Verifica se a página do processo está na memória.
-		if (memory.contains(page)) {
+		// Verifica se a página do processo está na Pagetabe.
+		if (process.isPageValid(page)) {
 
 			System.out.println(
 					new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Despachante percebe que a pagina "
@@ -146,10 +147,10 @@ public class Dispatcher extends Thread {
 		else {
 
 			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-					+ ".	Despachante percebe que o processo " + process.getId()
-					+ " está no disco e solicita que o Pager traga " + process.getId() + " à memória");
+					+ ".	Despachante percebe que a pagina " + page.getId() + " do processo " + process.getId()
+					+ " não está na memória e solicita que o Pager traga " + page.getId() + " à memória");
 
-			requestTransferToMemory(process);
+			requestTransferToMemory(process, page);
 
 		}
 
@@ -158,9 +159,9 @@ public class Dispatcher extends Thread {
 	/**
 	 * Solicita ao Pager a transferência de processo do disco para a memória.
 	 */
-	public void requestTransferToMemory(Process process) {
+	public void requestTransferToMemory(Process process, Page page) {
 
-		pager.setRequestForTransferOfProcess(process);
+		pager.setRequestForTransferOfProcess(process, page);
 
 		synchronized (monitorPager) {
 
@@ -173,7 +174,8 @@ public class Dispatcher extends Thread {
 		}
 
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Despachante é avisado pelo Pager que o processo " + process.getId() + " está na memória");
+				+ ".	Despachante é avisado pelo Pager que a pagina " + page.getId() + " do processo "
+				+ process.getId() + " esta no quadro " + process.getIdFrame(page.getId()));
 
 		dispatchProcess();
 

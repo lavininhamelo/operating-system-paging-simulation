@@ -27,6 +27,10 @@ public class Pager extends Thread implements Runnable {
 	 * Processo alocado pelo FCFSScheduler para ser enviado para memoria.
 	 */
 	private Process process;
+	/**
+	 * pagina alocado pelo Dispacher para ser enviado para memoria.
+	 */
+	private Page requestForTransferOfPage;
 
 	/**
 	 * Processo alocado pelo Dispatcher para ser transferido do disco para memoria.
@@ -67,8 +71,9 @@ public class Pager extends Thread implements Runnable {
 	}
 
 	// Pegar página do processo
-	public void setRequestForTransferOfProcess(Process requestForTransferOfProcess) {
+	public void setRequestForTransferOfProcess(Process requestForTransferOfProcess, Page requestForTransferOfPage) {
 		this.requestForTransferOfProcess = requestForTransferOfProcess;
+		this.requestForTransferOfPage = requestForTransferOfPage;
 	}
 
 	/**
@@ -76,7 +81,7 @@ public class Pager extends Thread implements Runnable {
 	 */
 	public synchronized void putProcessInToMemory(Process process) {
 
-		memory.addProcess(process);
+		memory.addPageProcess(process);
 
 	}
 
@@ -106,10 +111,6 @@ public class Pager extends Thread implements Runnable {
 				new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager avisa o Despachante que o processo "
 						+ requestForTransferOfProcess.getId() + " está na memória");
 
-	}
-
-	public int contFault() {
-		return this.fault++;
 	}
 
 	@Override

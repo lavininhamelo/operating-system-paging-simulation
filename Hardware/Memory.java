@@ -1,53 +1,49 @@
 package Hardware;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
+import java.util.Date;
 import java.util.Vector;
 
 import Software.Process;
+import Software.Page;
+import Software.Frame;
 
 /**
- * Responsável por gerenciar os processos que serão utilizados posteriormente pela CPU.
+ * Responsável por gerenciar os processos que serão utilizados posteriormente
+ * pela CPU.
  */
-public class Memory extends Vector<Process>{
+public class Memory extends Vector<Frame> {
 
 	/**
-	 * Tamanho da memória.
-	 */
-	private static int tmp;
-
-	/**
-	 * Tamanho da memória.
+	 * Número de frames.
 	 */
 	private static int nframes;
 
 	/**
-	 * Tamanho ocupado pelos processos.
-	 * 
+	 * Grupo para alocação e manipulação dos frames na Memória.
 	 */
-	private static int tmpAllocated;
+	private static Vector<Frame> storage;
 
 	/**
-	 * Comunicação com a CPU.
+	 * Lista de frames livres.
+	 * 
 	 */
-	private CPU cPU;
-
+	private static Vector<Frame> freeFrames;
 	/**
 	 * Comunicação com o Disco.
 	 */
 	private Disk disk;
 
-	/**
-	 * Grupo para alocação e manipulação dos processos na Memória.
-	 */
-	private static Vector<Partition> storage;
-
-	public Memory(int tmp) {
-		this.tmp = tmp;
+	public Memory(int nframes) {
 		this.nframes = nframes;
 		this.storage = new Vector<>();
-		this.storage.add(new Partition(1, tmp));
+
+		for (int i = 0; i < nframes; i++) {
+			storage.add(new Frame(i));
+		}
+
+		this.freeFrames = this.storage;
 	}
 
 	public void setDisk(Disk disk) {
@@ -55,128 +51,113 @@ public class Memory extends Vector<Process>{
 	}
 
 	/**
-	 * Retira o processo da memória e transfere para o disco.
+	 * Retira o frame da memória e transfere para o disco.
 	 */
-	public void writeInDisk(Process process) {
-		disk.add(process);
+	public void writeInDisk(Page page) {
+		disk.add(page);
 	}
 
 	/**
-	 * Aloca novo processo na memória.
+	 * Aloca nova página de processo na memória.
 	 */
-	public void addProcess(Process process) {
+	public void addPageProcess(Page page) {
 
-		boolean allocatedProcess = false;
+		// boolean allocatedProcess = false;
 
-		while(!allocatedProcess) {
+		// while (!allocatedProcess) {
 
-			Vector<Partition> emptyPartitions = new Vector<>();
+		// Vector<Partition> emptyPartitions = new Vector<>();
 
-			storage.forEach(partition -> {
-				if (partition.getProcess() == null)
-					if (partition.getSize() >= process.getTp())
-						emptyPartitions.add(partition);
-			 });
+		// storage.forEach(partition -> {
+		// if (partition.getProcess() == null)
+		// if (partition.getSize() >= process.getTp())
+		// emptyPartitions.add(partition);
+		// });
 
-		 	if (!emptyPartitions.isEmpty()) {
+		// if (!emptyPartitions.isEmpty()) {
 
-		 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-						+ ".	Swapper percebe que há espaço ao processo " + process.getId()
-						+ " na memória");
+		// System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
+		// + ". Swapper percebe que há espaço ao processo " + process.getId() + " na
+		// memória");
 
-				Partition partition = emptyPartitions.firstElement();
-				int indexPartition = storage.indexOf(partition);
+		// Partition partition = emptyPartitions.firstElement();
+		// int indexPartition = storage.indexOf(partition);
 
-				Partition emptySpace = new Partition(process.getTp() + 1 , partition.getEnd());
-				partition.setEnd(process.getTp());
-				partition.setProcess(process);
+		// Partition emptySpace = new Partition(process.getTp() + 1,
+		// partition.getEnd());
+		// partition.setEnd(process.getTp());
+		// partition.setProcess(process);
 
-				storage.remove(indexPartition);
-				storage.add(indexPartition, partition);
-				storage.add(indexPartition+1, emptySpace);
+		// storage.remove(indexPartition);
+		// storage.add(indexPartition, partition);
+		// storage.add(indexPartition + 1, emptySpace);
 
-				allocatedProcess = true;
-			 }
+		// allocatedProcess = true;
+		// }
 
-		 	else {
+		// else {
 
-		 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-						+ ".	Swapper percebe que não há espaço ao processo " + process.getId()
-						+ " na memória");
+		// System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
+		// + ". Swapper percebe que não há espaço ao processo " + process.getId() + " na
+		// memória");
 
-				Vector<Partition> allocatedPartitions = new Vector<>();
+		// Vector<Partition> allocatedPartitions = new Vector<>();
 
-				storage.forEach(partition -> {
-					if (partition.getProcess() != null) {
-						allocatedPartitions.add(partition);
-					}
-				});
+		// storage.forEach(partition -> {
+		// if (partition.getProcess() != null) {
+		// allocatedPartitions.add(partition);
+		// }
+		// });
 
-				Process processBackup = allocatedPartitions.firstElement().getProcess();
+		// Process processBackup = allocatedPartitions.firstElement().getProcess();
 
-				allocatedPartitions.firstElement().setProcess(null);
+		// allocatedPartitions.firstElement().setProcess(null);
 
-				writeInDisk(processBackup);
+		// writeInDisk(processBackup);
 
-				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-						+ ".	Swapper retirou o processo " + processBackup.getId()
-						+ " para liberar espaço na memória, e o enviou ao disco");
+		// System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".
+		// Swapper retirou o processo "
+		// + processBackup.getId() + " para liberar espaço na memória, e o enviou ao
+		// disco");
 
-				for (int i = 0; i < storage.size() - 1; i++) {
-					if (storage.get(i).getProcess() == null && storage.get(i + 1).getProcess() == null) {
-						storage.get(i).setEnd(storage.get(i + 1).getEnd());
-						storage.remove(i + 1);
-						break;
-					}
+		// for (int i = 0; i < storage.size() - 1; i++) {
+		// if (storage.get(i).getProcess() == null && storage.get(i + 1).getProcess() ==
+		// null) {
+		// storage.get(i).setEnd(storage.get(i + 1).getEnd());
+		// storage.remove(i + 1);
+		// break;
+		// }
 
-				}
-			}
+		// }
+		// }
 
-		}
+		// }
 
 	}
 
 	/**
-	 * Retorna o processo alocado na memória especificado pelo parâmetro de entrada 'idProcess'.
+	 * Retorna a página alocado na memória especificada pelo parâmetro de entrada
+	 * 'idPage'.
 	 */
-	public Process getProcess(int idProcess) {
-
-		for (Partition partition : storage) {
-			if (partition.getProcess().getId() == idProcess)
-				return partition.getProcess();
-
+	public Page getProcessPage(int idPage) {
+		for (Frame frame : storage) {
+			if (frame.getPage().getId() == idPage)
+				return frame.getPage();
 		}
 
 		return null;
-
 	}
 
 	/**
-	 * Verifica se o 'process' correspondente a algum processo alocado na memória.
+	 * Verifica se a página está alocada na memória.
 	 */
-	public boolean contains(Process process) {
-
-		for (Partition partition : storage) {
-			if (partition.getProcess() != null)
-				if (partition.getProcess().getId() == process.getId())
+	public boolean contains(Page page) {
+		for (Frame frame : storage) {
+			if (frame.getPage() != null)
+				if (frame.getPage().getId() == page.getId())
 					return true;
-
 		}
 
 		return false;
-
 	}
-
-	// public boolean checkMemorySpace(int tp) {}
-
-	// public void setTmpAllocated(int tmpAllocated) {}
-
-	// public int getTmpAllocated() {}
-
-	// public void setTmp(int tmp) {}
-
-	// public int getTmp() {}
-
-	// public void removeProcess(int idProcess) {}
-
 }

@@ -1,36 +1,37 @@
 package Hardware;
 
-import Software.Process;
+import Software.Page;
 
 /**
- * Responsável pela execução dos processos.
+ * Responsável pela execução das páginas.
  */
 public class CPU {
 
-	private static int idProcess;
+	private static int idPage;
 
 	/**
-	 * Processo alocado na CPU.
+	 * Página alocada na CPU.
 	 */
-	private static Process process;
+	private static Page page;
 
 	/**
 	 * Comunicação com a Memória.
 	 */
 	private Memory memory;
 
-	public CPU() {}
+	public CPU() {
+	}
 
 	public void setMemory(Memory memory) {
 		this.memory = memory;
 	}
 
 	/**
-	 *	Recebe e busca o proximo processo a ser alocado na CPU.
+	 * Recebe e busca o proximo processo a ser alocado na CPU.
 	 */
-	public void setIdProcess(int idProcess) {
-		this.idProcess = idProcess;
-		process = memory.getProcess(this.idProcess);
+	public void setIdProcess(int idPage) {
+		this.idPage = idPage;
+		page = memory.getProcessPage(this.idPage);
 	}
 
 	public void setProcess(Process process) {
@@ -56,7 +57,7 @@ public class CPU {
 	 *
 	 * Para cada ciclo de processamento deverá ser realizado os seguintes processos:
 	 *
-	 * 	- Retirar um segundo do time burst do processo.
+	 * - Retirar um segundo do time burst do processo.
 	 */
 	public void run() {
 		updateProcessBurstTime();

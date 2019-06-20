@@ -14,7 +14,6 @@ public class Page {
    * Identificação Processo.
    */
   private int idProcess;
-  // private boolean validInvalidBit;
 
   public Page() {
   }
@@ -29,7 +28,7 @@ public class Page {
   }
 
   public int getId() {
-    return idPage;
+    return this.idPage;
   }
 
   public void setIdProcess(int idProcess) {
@@ -37,7 +36,7 @@ public class Page {
   }
 
   public int getIdProcess() {
-    return idProcess;
+    return this.idProcess;
   }
 
 }

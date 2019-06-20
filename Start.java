@@ -1,3 +1,4 @@
+
 /*
 
 Alunos:
@@ -8,7 +9,6 @@ Lavinia da Silva Costa Melo - 2017.1906.056-8
 
 
 */
-
 
 import Hardware.CPU;
 import Hardware.Disk;
@@ -31,7 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Vector;
-
+import java.util.Scanner;
 
 public class Start {
 
@@ -55,32 +55,25 @@ public class Start {
 
 		// --------------------- Capturando configuraçoes gerais ---------------------
 
-		int seed,
-				numeroDeFrames,
-				numeroDeProcessos,
-				timeQuantum;
+		Scanner in = new Scanner(System.in);
+		int seed, numeroDeFrames, numeroDeProcessos, timeQuantum;
 
-		seed = Integer.parseInt(args[0]);
-		numeroDeFrames = Integer.parseInt(args[1]);
-		numeroDeProcessos = Integer.parseInt(args[2]);
-		timeQuantum = Integer.parseInt(args[3]);
-
+		seed = in.nextInt();
+		numeroDeFrames = in.nextInt();
+		numeroDeProcessos = in.nextInt();
+		timeQuantum = in.nextInt();
 
 		// --------------------- Capturando processos ---------------------
 
-		int identificacaoProcesso,
-				numeroDePaginas,
-				tempoDeChegada,
-				tempoDeBurst;
+		int identificacaoProcesso, numeroDePaginas, tempoDeChegada, tempoDeBurst;
 
-		int args_count = 4;
-		Collection<Process> processos  = new Vector<>();
+		Collection<Process> processos = new Vector<>();
 		while (numeroDeProcessos > 0) {
 
-			identificacaoProcesso = Integer.parseInt(args[args_count++]);
-			numeroDePaginas = Integer.parseInt(args[args_count++]);
-			tempoDeChegada = Integer.parseInt(args[args_count++]);
-			tempoDeBurst = Integer.parseInt(args[args_count++]);
+			identificacaoProcesso = in.nextInt();
+			numeroDePaginas = in.nextInt();
+			tempoDeChegada = in.nextInt();
+			tempoDeBurst = in.nextInt();
 
 			Process processo = new Process(identificacaoProcesso, numeroDePaginas, tempoDeChegada, tempoDeBurst);
 			processos.add(processo);
@@ -89,7 +82,6 @@ public class Start {
 
 		}
 
-
 		// --------------------- Inicializando monitores ---------------------
 
 		monitorDP = new MonitorDispatcherPager();
@@ -97,11 +89,10 @@ public class Start {
 		monitorRD = new MonitorRoundRobinDispatcher();
 		monitorRT = new MonitorRoundRobinTimer();
 
-
 		// --------------------- Inicializando componentes ---------------------
 
 		cPU = new CPU();
-		memory = new Memory(seed);
+		memory = new Memory(numeroDeFrames);
 		disk = new Disk();
 
 		roundRobinScheduler = new RoundRobinScheduler(timeQuantum, monitorRD, monitorRT);
@@ -111,7 +102,6 @@ public class Start {
 		pager = new Pager(monitorDP);
 		timer = new Timer(roundRobinScheduler, monitorRT, monitorDT);
 
-
 		// --------------------- Configurando componentes ---------------------
 
 		cPU.setMemory(memory);
@@ -120,7 +110,6 @@ public class Start {
 
 		roundRobinScheduler.setDispatcher(dispatcher);
 		roundRobinScheduler.setTimer(timer);
-
 
 		dispatcher.setcPU(cPU);
 		dispatcher.setMemory(memory);
@@ -133,18 +122,15 @@ public class Start {
 		timer.setcPU(cPU);
 		timer.setDispatcher(dispatcher);
 
-
 		// --------------------- Inicializando Threads ---------------------
 
-		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Início da observação");
+		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Início da observação");
 
 		dispatcher.start();
 		processCreator.start();
 		roundRobinScheduler.start();
 		pager.start();
 		timer.start();
-
 
 		// --------------------- Esperando conclusao de Threads ---------------------
 
@@ -158,22 +144,12 @@ public class Start {
 			pager.join();
 			timer.join();
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
-		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Término da observação");
+		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Término da observação");
 
 	}
 
 }
-
-
-
-
-
-
-
-
-

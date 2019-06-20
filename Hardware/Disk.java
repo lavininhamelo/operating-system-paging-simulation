@@ -3,11 +3,14 @@ package Hardware;
 import java.util.Vector;
 
 import Software.Process;
+import Software.Page;
+import Software.Frame;
 
 /**
- * Responsável por armazenar e gerenciar os processos que não poderam ser alocados na memória.
+ * Responsável por armazenar e gerenciar os processos que não poderam ser
+ * alocados na memória.
  */
-public class Disk extends Vector<Process> {
+public class Disk extends Vector<Page> {
 
 	/**
 	 * Comunicação com a Memória.
@@ -15,9 +18,9 @@ public class Disk extends Vector<Process> {
 	private Memory memory;
 
 	/**
-	 * Grupo para alocação e manipulação dos processos no Disco.
+	 * Grupo para alocação e manipulação das páginas de processos no Disco.
 	 */
-	private static Vector<Process> storage;
+	private static Vector<Page> storage;
 
 	public Disk() {
 		this.storage = new Vector<>();
@@ -28,20 +31,23 @@ public class Disk extends Vector<Process> {
 	}
 
 	/**
-	 * Retira o processo do disco e transfere para a memória. O processo a ser transferido é especificado pelo parâmetro de entrada ‘idProcess’ deste método.
+	 * Retira o processo do disco e transfere para a memória. O processo a ser
+	 * transferido é especificado pelo parâmetro de entrada ‘idProcess’ deste
+	 * método.
 	 */
 	public void writeInMemory(int idProcess) {
 
 		Process process = getProcess(idProcess);
 
-		memory.addProcess(process);
+		memory.addPageProcess(process);
 
 		storage.remove(process);
 
 	}
 
 	/**
-	 * Retorna o processo alocado na memória especificado pelo parâmetro de entrada 'idProcess'.
+	 * Retorna o processo alocado na memória especificado pelo parâmetro de entrada
+	 * 'idProcess'.
 	 */
 	public Process getProcess(int idProcess) {
 
@@ -55,13 +61,13 @@ public class Disk extends Vector<Process> {
 	}
 
 	/**
-	 * Aloca novo processo no disco.
+	 * Aloca uma nova página no disco.
 	 */
 	@Override
-	public boolean add(Process Process) {
+	public boolean add(Page page) {
 
-		return storage.add(Process);
-		
+		return storage.add(page);
+
 	}
 
 }

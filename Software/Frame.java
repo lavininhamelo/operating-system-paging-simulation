@@ -8,14 +8,27 @@ public class Frame {
   /**
    * Identificação.
    */
-  private int idFrame;
+  private int id;
 
-  public Frame(int idFrame) {
-    this.idFrame = idFrame;
+  /**
+   * Página do frame.
+   */
+  private Page page;
+
+  public Frame(int id) {
+    this.id = id;
   }
 
   public int getId() {
-    return idFrame;
+    return this.id;
+  }
+
+  public void setPage(Page page) {
+    this.page = page;
+  }
+
+  public Page getPage() {
+    return this.page;
   }
 
 }

@@ -18,7 +18,7 @@ public class InputBuffer extends Vector<Process> {
 		inputBuffer = new Vector<>();
 	}
 
-	public void addProcess(Process process) {
+	public void addPageProcess(Process process) {
 		inputBuffer.add(process);
 	}
 

@@ -15,21 +15,56 @@ public class PageTable {
   /**
    * Identificação da página.
    */
-  private Vector<FramePageTable> framePageTable;
+  private FramePageTable framePageTable;
+  
+  /**
+   * Bit de Refencia
+   */
+
+  private boolean referenceBit;
+
+  /**
+   * Bit de Refencia
+   */
+
+  private boolean validInvalidBit;
 
   /**
    * Contador para percorrer os Frames.
    */
   private int count;
 
-  public PageTable(int pageId, int referenceBit) {
-    this.pageId = pageId;
-    this.framePageTable = new Vector<FramePageTable>();
-    this.count = 0;
 
-    for (int i = 0; i < np; i++) {
-      framePageTable.add(new FramePageTable(i, id));
-    }
+  public PageTable(int pageId, boolean referenceBit, boolean validInvalidBit) {
+    this.pageId = pageId;
+    this.referenceBit = false;
+    this.validInvalidBit = false;
+
   }
+
+  public void setPageId(int pageId) {
+    this.pageId = pageId;
+  }
+
+  public int getPageId() {
+    return this.pageId;
+  }
+
+  public void setValidInvalidBit(boolean validInvalidBit) {
+    this.validInvalidBit = validInvalidBit;
+  }
+
+  public boolean getValidInvalidBit() {
+    return this.validInvalidBit;
+  }
+
+  public void setReferenceBit(boolean referenceBit) {
+    this.referenceBit = referenceBit;
+  }
+
+  public boolean getReferenceBit() {
+    return this.referenceBit;
+  }
+
 
 }
