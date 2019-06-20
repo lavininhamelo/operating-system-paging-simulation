@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.Collection;
 import java.util.Vector;
 
+import Hardware.Disk;
+
 /**
  * Responsável por construir processos e adicioná-los na fila de entrada.
  */
@@ -29,6 +31,7 @@ public class ProcessCreator extends Thread {
 	 * Comunicação com o Process.
 	 */
 	private Process process;
+	private Disk disk;
 
 	/**
 	 * Grupo para alocação e manipulação dos processos.
@@ -60,6 +63,11 @@ public class ProcessCreator extends Thread {
 				+ " e o colocou na fila de prontos");
 
 		processosCriados.add(process);
+		disk.add(process);
+	}
+
+	public void setDisk(Disk disk) {
+		this.disk = disk;
 	}
 
 	@Override

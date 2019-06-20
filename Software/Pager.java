@@ -23,15 +23,15 @@ public class Pager extends Thread implements Runnable {
 	 */
 	private Disk disk;
 
-	/**
-	 * Processo alocado pelo FCFSScheduler para ser enviado para memoria.
-	 */
-	private Process process;
 
 	/**
 	 * Processo alocado pelo Dispatcher para ser transferido do disco para memoria.
 	 */
 	private Process requestForTransferOfProcess;
+	/**
+	 * pagina alocado pelo Dispacher para ser enviado para memoria.
+	 */
+	private Page requestForTransferOfPage;
 
 	/**
 	 * Monitor entre Dispatcher e Swapper.
@@ -60,20 +60,19 @@ public class Pager extends Thread implements Runnable {
 		this.statusRoundRobinScheduler = statusRoundRobinScheduler;
 	}
 
-	public void setProcess(Process process) {
-		this.process = process;
-	}
+	
 
-	public void setRequestForTransferOfProcess(Process requestForTransferOfProcess) {
+	public void setRequestForTransferOfProcess(Process requestForTransferOfProcess, Page requestForTransferOfPage) {
 		this.requestForTransferOfProcess = requestForTransferOfProcess;
+		this.requestForTransferOfPage = requestForTransferOfPage;
 	}
 
 	/**
 	 * Aloca processo na memória.
 	 */
-	public synchronized void putProcessInToMemory(Process process) {
+	public synchronized void putProcessInToMemory(Process process,Page page) {
 
-		memory.addProcess(process);
+		memory.addProcess(process, page);
 
 	}
 
@@ -81,8 +80,8 @@ public class Pager extends Thread implements Runnable {
 	 * Solicita que disco transfira processo para a memória.
 	 */
 	public void transferToMemory() {
-
-		disk.writeInMemory(requestForTransferOfProcess.getId());
+	
+		disk.writeInMemory(requestForTransferOfProcess.getId(), requestForTransferOfPage);
 
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
 				+ ".	Pager traz processo " + requestForTransferOfProcess.getId()
@@ -119,10 +118,10 @@ public class Pager extends Thread implements Runnable {
 
 			}
 
-			if (process != null) {
+			if (requestForTransferOfProcess != null) {
 
-				putProcessInToMemory(process);
-				process = null;
+				putProcessInToMemory(requestForTransferOfProcess, requestForTransferOfPage);
+				requestForTransferOfProcess = null;
 
 			}
 

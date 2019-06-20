@@ -1,24 +1,42 @@
 package Software;
 
-import Software.Process;
-
 /**
  * Pages do Processo
  */
 public class Page {
 
   /**
-   * Identificação.
+   * Identificação Page.
    */
-  private int id;
+  private int idPage;
 
   /**
-   * Identificação.
+   * Identificação Processo.
    */
-  private boolean validInvalidBit;
+  private int idProcess;
 
   public Page() {
-    this.validInvalidBit = false;
+  }
+
+  public Page(int idPage, int idProcess) {
+    this.idPage = idPage;
+    this.idProcess = idProcess;
+  }
+
+  public void setId(int idPage) {
+    this.idPage = idPage;
+  }
+
+  public int getId() {
+    return this.idPage;
+  }
+
+  public void setIdProcess(int idProcess) {
+    this.idProcess = idProcess;
+  }
+
+  public int getIdProcess() {
+    return this.idProcess;
   }
 
 }

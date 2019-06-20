@@ -2,6 +2,7 @@ package Hardware;
 
 import java.util.Vector;
 
+import Software.Page;
 import Software.Process;
 
 /**
@@ -30,11 +31,12 @@ public class Disk extends Vector<Process> {
 	/**
 	 * Retira o processo do disco e transfere para a memória. O processo a ser transferido é especificado pelo parâmetro de entrada ‘idProcess’ deste método.
 	 */
-	public void writeInMemory(int idProcess) {
+	public void writeInMemory(int idProcess, Page page) {
 
 		Process process = getProcess(idProcess);
+		System.out.println(process.getId());
 
-		memory.addProcess(process);
+		memory.addProcess(process, page);
 
 		storage.remove(process);
 

@@ -1,5 +1,7 @@
 package Software;
 
+import java.util.Vector;
+
 /**
  * Processo.
  */
@@ -11,7 +13,7 @@ public class Process {
 	private int id;
 
 	/**
-	 * Tamanho do processo.
+	 * Numero de Paginas.
 	 */
 	private int np;
 
@@ -29,12 +31,26 @@ public class Process {
 	 * Identificação da tabela de páginas.
 	 */
 	private int pageTableId;
+	/**
+	 * Identificação da tabela de páginas.
+	 */
+	private PageTable pageTable;
+	/**
+	 * Vetor de Paginas
+	 */
+	private Vector<Page> paginas;
 
 	public Process(int id, int np, int tc, int tb) {
 		this.id = id;
 		this.np = np;
 		this.tc = tc;
 		this.tb = tb;
+		this.paginas = new Vector<Page>();
+
+		for (int i = 0; i < np; i++) {
+			paginas.add(new Page(i, id));
+		}
+		this.pageTable= new PageTable(id);
 	}
 
 	public void setId(int id) {
@@ -42,7 +58,7 @@ public class Process {
 	}
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setNp(int np) {
@@ -50,7 +66,7 @@ public class Process {
 	}
 
 	public int getNp() {
-		return np;
+		return this.np;
 	}
 
 	public void setTc(int tc) {
@@ -58,7 +74,7 @@ public class Process {
 	}
 
 	public int getTc() {
-		return tc;
+		return this.tc;
 	}
 
 	public void setTb(int tb) {
@@ -66,7 +82,48 @@ public class Process {
 	}
 
 	public int getTb() {
-		return tb;
+		return this.tb;
 	}
+
+	public Page getPageById(int id) {
+		Page p = new Page();
+		for (Page a : paginas) {
+			if (a.getId() == id) {
+				p = a;
+			}
+		}
+		return p;
+	}
+
+	public int getIdFrame(int idPage) {
+		return this.pageTable.getId();
+	}
+
+	public boolean isPageValid(Page page) {
+
+		if (pageTable.getValidInvalidBit()) 
+			return true;
+		else
+		return false;
+
+	}
+
+	public int getPageTableId() {
+		return pageTableId;
+	}
+
+	public void setPageTableId(int pageTableId) {
+		this.pageTableId = pageTableId;
+	}
+
+	public PageTable getPageTable() {
+		return pageTable;
+	}
+
+	public void setPageTable(PageTable pageTable) {
+		this.pageTable = pageTable;
+	}
+
+	
 
 }
