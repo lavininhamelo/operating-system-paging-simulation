@@ -44,6 +44,7 @@ public class Process {
 		this.np = np;
 		this.tc = tc;
 		this.tb = tb;
+		this.pageTable = new PageTable(id);
 		this.pages = new Vector<Page>();
 
 		for (int i = 0; i < np; i++) {

@@ -8,7 +8,7 @@ public class Page {
   /**
    * Identificação Page.
    */
-  private int idPage;
+  private int id;
 
   /**
    * Identificação Processo.
@@ -18,17 +18,17 @@ public class Page {
   public Page() {
   }
 
-  public Page(int idPage, int idProcess) {
-    this.idPage = idPage;
+  public Page(int id, int idProcess) {
+    this.id = id;
     this.idProcess = idProcess;
   }
 
-  public void setId(int idPage) {
-    this.idPage = idPage;
+  public void setId(int id) {
+    this.id = id;
   }
 
   public int getId() {
-    return this.idPage;
+    return this.id;
   }
 
   public void setIdProcess(int idProcess) {

@@ -1,7 +1,5 @@
 package Software;
 
-import java.util.Vector;
-
 /**
  * Pages do Processo
  */
@@ -35,7 +33,7 @@ public class PageTable {
   private int count;
 
 
-  public PageTable(int pageId, boolean referenceBit, boolean validInvalidBit) {
+  public PageTable(int pageId) {
     this.pageId = pageId;
     this.referenceBit = false;
     this.validInvalidBit = false;
