@@ -17,6 +17,7 @@ public class Frame {
 
   public Frame(int id) {
     this.id = id;
+    this.page = new Page();
   }
 
   public int getId() {

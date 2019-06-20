@@ -6,7 +6,6 @@ import java.util.Vector;
  * Processo.
  */
 public class Process {
-
 	/**
 	 * Identificação.
 	 */
@@ -38,17 +37,17 @@ public class Process {
 	/**
 	 * Vetor de Paginas
 	 */
-	private Vector<Page> paginas;
+	private Vector<Page> pages;
 
 	public Process(int id, int np, int tc, int tb) {
 		this.id = id;
 		this.np = np;
 		this.tc = tc;
 		this.tb = tb;
-		this.paginas = new Vector<Page>();
+		this.pages = new Vector<Page>();
 
 		for (int i = 0; i < np; i++) {
-			paginas.add(new Page(i, id));
+			pages.add(new Page(i, id));
 		}
 	}
 
@@ -84,16 +83,17 @@ public class Process {
 		return this.tb;
 	}
 
-	public Page getPageById(int id) {
-		Page p = new Page();
-		for (Page a : paginas) {
-			if (a.getId() == id) {
-				p = a;
+	public Page getPageById(int pageId) {
+		for (Page page : pages) {
+			if (page.getId() == pageId) {
+				return page;
 			}
 		}
-		return p;
+
+		return null;
 	}
 
+	// TODO
 	public int getIdFrame(int idPage) {
 		return 0;
 	}
@@ -105,7 +105,5 @@ public class Process {
 		}
 
 		return false;
-
 	}
-
 }

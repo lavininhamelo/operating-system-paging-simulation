@@ -79,7 +79,6 @@ public class Start {
 			processos.add(processo);
 
 			numeroDeProcessos--;
-
 		}
 
 		// --------------------- Inicializando monitores ---------------------
@@ -135,7 +134,6 @@ public class Start {
 		// --------------------- Esperando conclusao de Threads ---------------------
 
 		try {
-
 			processCreator.join();
 			roundRobinScheduler.setStatusProcess("concluded");
 
@@ -149,7 +147,5 @@ public class Start {
 		}
 
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Término da observação");
-
 	}
-
 }

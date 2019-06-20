@@ -26,11 +26,6 @@ public class Memory extends Vector<Frame> {
 	private static Vector<Frame> storage;
 
 	/**
-	 * Lista de frames livres.
-	 * 
-	 */
-	private static Vector<Frame> freeFrames;
-	/**
 	 * Comunicação com o Disco.
 	 */
 	private Disk disk;
@@ -42,8 +37,6 @@ public class Memory extends Vector<Frame> {
 		for (int i = 0; i < nframes; i++) {
 			storage.add(new Frame(i));
 		}
-
-		this.freeFrames = this.storage;
 	}
 
 	public void setDisk(Disk disk) {
@@ -77,7 +70,7 @@ public class Memory extends Vector<Frame> {
 		// if (!emptyPartitions.isEmpty()) {
 
 		// System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-		// + ". Swapper percebe que há espaço ao processo " + process.getId() + " na
+		// + ". Pager percebe que há espaço " + process.getId() + " na
 		// memória");
 
 		// Partition partition = emptyPartitions.firstElement();
@@ -160,4 +153,20 @@ public class Memory extends Vector<Frame> {
 
 		return false;
 	}
+
+	public void secondChance(Vector<Frame> storage) {
+
+	}
+
+	public void freeFrames() {
+		System.out.println("Lista de quadros livres:");
+
+		for (Frame frame : storage) {
+			if (frame.getPage() == null) {
+				System.out.println("Pagina" + frame.getId());
+			}
+		}
+
+	}
+
 }
