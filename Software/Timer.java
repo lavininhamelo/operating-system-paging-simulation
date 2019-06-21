@@ -94,7 +94,7 @@ public class Timer extends Thread {
 				+ " atualmente em execução precisa ser retirado da CPU");
 
 	}
-
+ 
 	/**
 	 * Realiza ciclo de tempo no sistema operacional.
 	 *

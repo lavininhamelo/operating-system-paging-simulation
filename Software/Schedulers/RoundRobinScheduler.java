@@ -1,5 +1,8 @@
 package Software.Schedulers;
 
+import Hardware.Memory;
+import Hardware.Disk;
+
 import Software.Buffers.ReadyBuffer;
 import Software.Dispatcher;
 import Software.Process;
@@ -26,6 +29,16 @@ public class RoundRobinScheduler extends Thread implements Runnable {
 	 * Comunicação com o ReadyBuffer.
 	 */
 	private static ReadyBuffer readyBuffer;
+
+	/**
+	 * Comunicação com a memória.
+	 */
+	private Memory memory;
+
+	/**
+	 * Comunicação com o disco.
+	 */
+	private static Disk disk;
 
 	/**
 	 * Comunicação com o Dispatcher.
@@ -72,6 +85,10 @@ public class RoundRobinScheduler extends Thread implements Runnable {
 
 	public void setTimer(Timer timer) {
 		this.timer = timer;
+	}
+
+	public void setMemory(Memory memory) {
+		this.memory = memory;
 	}
 
 	public int getTq() {
@@ -137,6 +154,8 @@ public class RoundRobinScheduler extends Thread implements Runnable {
 
 		process = null;
 
+		memory.printFreeFrames();
+		// disk.printNotFinished();
 	}
 
 	/**

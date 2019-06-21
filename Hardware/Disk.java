@@ -5,6 +5,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 import Software.Page;
+import Software.PageTable;
 import Software.Process;
 import Software.Buffers.ReadyBuffer;
 
@@ -27,7 +28,7 @@ public class Disk extends Vector<Process> {
 	private static Vector<Process> storage;
 
 	public Disk() {
-		this.storage = new Vector<Process>();
+		storage = new Vector<Process>();
 		readyBuffer = new ReadyBuffer();
 	}
 
@@ -71,16 +72,16 @@ public class Disk extends Vector<Process> {
 	public void printNotFinished() {
 		for (Process process : readyBuffer.getAll()) {
 			if (process.getTb() > 0)
-				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ". O processo "
+				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	O processo "
 						+ process.getId() + " não foi terminado.");
 		}
 
-		for (Process process : this.storage) {
+		for (Process process : storage) {
 			if (process.getTb() > 0)
-				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ". O processo "
+				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	O processo "
 						+ process.getId() + " não foi terminado.");
 		}
-	}
+	} 
 
 	/**
 	 * Aloca novo processo no disco.
@@ -90,14 +91,22 @@ public class Disk extends Vector<Process> {
 		return storage.add(process);
 	}
 
-	public void setInvalidBit(int idFrame ){
-		for(Process p :storage){
-			if(p.getPageTable().getFrameId()==idFrame)
-				p.getPageTable().setValidInvalidBit(false);
-		}
-		for(Process p :readyBuffer){
-			if(p.getPageTable().getFrameId()==idFrame)
-				p.getPageTable().setValidInvalidBit(false);
-		}
+	public void setInvalidBit(int idFrame, Page page) {
+		for (Process p : storage) {
+			for (PageTable a : p.getPageTable()) {
+				if (a.getFrameId() == idFrame&&page.getIdProcess()!=a.getPage().getIdProcess()) {
+					a.setValidInvalidBit(false);
+				}
+			}
 
+		}
+		for (Process p : readyBuffer) {
+			for (PageTable a : p.getPageTable()) {
+				if (a.getFrameId() == idFrame&&page.getIdProcess()!=a.getPage().getIdProcess()) {
+					a.setValidInvalidBit(false);
+				}
+			}
+
+		}
+	}
 }

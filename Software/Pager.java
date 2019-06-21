@@ -28,7 +28,7 @@ public class Pager extends Thread implements Runnable {
 	 */
 	private Process requestForTransferOfProcess;
 	/**
-	 * pagina alocado pelo Dispacher para ser enviado para memoria.
+	 * página alocada pelo Dispacher para ser enviado para memoria.
 	 */
 	private Page requestForTransferOfPage;
 
@@ -62,9 +62,9 @@ public class Pager extends Thread implements Runnable {
 	public void setRequestForTransferOfProcess(Process requestForTransferOfProcess, Page requestForTransferOfPage) {
 		this.requestForTransferOfProcess = requestForTransferOfProcess;
 		this.requestForTransferOfPage = requestForTransferOfPage;
-	} 
-
-	/** 
+	}
+ 
+	/**
 	 * Aloca processo na memória.
 	 */
 	public synchronized void putProcessInToMemory(Process process, Page page) {
@@ -98,13 +98,15 @@ public class Pager extends Thread implements Runnable {
 				+ ".	Pager avisa o Despachante que a página " + requestForTransferOfPage.getId() + " do processo "
 				+ requestForTransferOfProcess.getId() + " está na memória");
 
+		memory.printFreeFrames();
+		disk.printNotFinished();
 	}
 
 	@Override
 	public void run() {
 
 		while (!statusRoundRobinScheduler.equals("concluded")) {
-			
+
 			if (requestForTransferOfProcess != null) {
 				transferToMemory();
 				notifyDispatcher();

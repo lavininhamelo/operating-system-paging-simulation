@@ -13,7 +13,7 @@ public class Process {
 	private int id;
 
 	/**
-	 * Numero de Paginas.
+	 * Numero de páginas.
 	 */
 	private int np;
 
@@ -30,27 +30,29 @@ public class Process {
 	/**
 	 * Identificação da tabela de páginas.
 	 */
-	private int pageTableId;
+
 	/**
-	 * Identificação da tabela de páginas.
+	 * Vetor de páginas
 	 */
-	private PageTable pageTable;
-	/**
-	 * Vetor de Paginas
-	 */
-	private Vector<Page> paginas;
+	private Vector<PageTable> pageTable;
 
 	public Process(int id, int np, int tc, int tb) {
 		this.id = id;
 		this.np = np;
 		this.tc = tc;
 		this.tb = tb;
-		this.paginas = new Vector<Page>();
+		this.pageTable = new Vector<PageTable>();
 
 		for (int i = 0; i < np; i++) {
-			paginas.add(new Page(i, id));
+			pageTable.add(new PageTable(i, id));
 		}
-		this.pageTable = new PageTable(id);
+
+		// for (PageTable b : pageTable) {
+		// System.out.println("Page ID: " + b.getPage().getId() + " Bit de Referência: "
+		// + b.getReferenceBit()
+		// + " Bit iválido: " + b.getValidInvalidBit());
+		// }
+
 	}
 
 	public void setId(int id) {
@@ -86,38 +88,48 @@ public class Process {
 	}
 
 	public Page getPageById(int id) {
-		int novoId = np % id;
+		int novoId = id % np;
 		Page p = new Page();
-		for (Page a : paginas) {
-			if (a.getId() == novoId) {
-				p = a;
+		for (PageTable a : pageTable) {
+			if (a.getPage().getId() == novoId) {
+				p = a.getPage();
 			}
 		}
 		return p;
 	}
 
-	public int getIdFrame() {
-		return this.pageTable.getFrameId();
+	public int getIdFrame(int idPage) {
+		int idFrame = -1;
+		for (PageTable a : pageTable) {
+			if (a.getPage().getId() == idPage) {
+				idFrame = a.getFrameId();
+			}
+		}
+		return idFrame;
 	}
 
-	public boolean isPageValid(Page page) {
-		return pageTable.getValidInvalidBit();
+	public boolean isPageValid(Page page) { 
+		boolean isValid = true;
+		for (PageTable a : pageTable) {
+			if (a.getPage().getId() == page.getId()) {
+				isValid = a.getValidInvalidBit();
+			}
+		}
+		return isValid;
 	}
 
-	public int getPageTableId() {
-		return pageTableId;
+	public PageTable getPageTable(Page page) {
+		PageTable pt = null;
+		for (PageTable a : pageTable) {
+			if (a.getPage().getId() == page.getId()) {
+				pt = a;
+			}
+		}
+		return pt;
 	}
 
-	public void setPageTableId(int pageTableId) {
-		this.pageTableId = pageTableId;
-	}
-
-	public PageTable getPageTable() {
-		return pageTable;
-	}
-
-	public void setPageTable(PageTable pageTable) {
-		this.pageTable = pageTable;
+	public Vector<PageTable> getPageTable() {
+		return this.pageTable;
 	}
 
 }

@@ -127,15 +127,15 @@ public class Dispatcher extends Thread {
 	 * freeUpCPU().
 	 *
 	 */
-	public void dispatchProcess() {
 
-		this.page = process.getPageById(this.chooseProcessPage(process));
+	public void dispatchProcess(Page page) {
 
 		// Verifica se a página do processo está na Pagetabe.
+
 		if (process.isPageValid(page)) {
 
 			System.out.println(
-					new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Despachante percebe que a pagina "
+					new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Despachante percebe que a página "
 							+ page.getId() + " do processo " + process.getId() + " está na memória");
 
 			freeUpCPU();
@@ -146,10 +146,10 @@ public class Dispatcher extends Thread {
 
 		}
 
-		else if (!process.isPageValid(page)) {
+		else {
 
 			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-					+ ".	Despachante percebe que a pagina " + page.getId() + " do processo " + process.getId()
+					+ ".	Despachante percebe que a página " + page.getId() + " do processo " + process.getId()
 					+ " não está na memória e solicita que o Pager traga " + page.getId() + " à memória");
 
 			requestTransferToMemory(process, page);
@@ -176,10 +176,10 @@ public class Dispatcher extends Thread {
 		}
 
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Despachante é avisado pelo Pager que a pagina " + page.getId() + " do processo "
-				+ process.getId() + " esta no quadro " + process.getIdFrame());
+				+ ".	Despachante é avisado pelo Pager que a página " + page.getId() + " do processo "
+				+ process.getId() + " esta no quadro " + process.getIdFrame(page.getId()));
 
-		dispatchProcess();
+		dispatchProcess(page);
 
 	}
 
@@ -197,7 +197,7 @@ public class Dispatcher extends Thread {
 	private void freeUpCPU() {
 
 		timer.setTimer(roundRobinScheduler.getTq());
-		cPU.setIdProcess(process);
+		cPU.setProcess(process);
 
 	}
 
@@ -216,7 +216,6 @@ public class Dispatcher extends Thread {
 
 	@Override
 	public void run() {
-
 		while (!statusRoundRobinScheduler.equals("concluded")) {
 
 			synchronized (monitorRoundRobin) {
@@ -230,8 +229,8 @@ public class Dispatcher extends Thread {
 			}
 
 			if (process != null) {
-
-				dispatchProcess();
+				this.page = process.getPageById(this.chooseProcessPage(process));
+				dispatchProcess(this.page);
 				process = null;
 
 				notifyTimer();
@@ -249,7 +248,5 @@ public class Dispatcher extends Thread {
 		timer.setStatusRoundRobinScheduler("concluded");
 		pager.setStatusRoundRobinScheduler("concluded");
 		notifyTimer();
-
 	}
-
 }

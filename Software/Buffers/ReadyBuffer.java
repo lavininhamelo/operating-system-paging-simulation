@@ -13,7 +13,7 @@ public class ReadyBuffer extends Vector<Process> {
 	 * Grupo para alocação dos processos prontos para serem alocados na CPU.
 	 */
 	private static Vector<Process> readyBuffer;
-
+ 
 	public ReadyBuffer() {
 		readyBuffer = new Vector<>();
 	}

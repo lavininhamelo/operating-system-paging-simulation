@@ -19,22 +19,18 @@ public class CPU {
 	 */
 	private Memory memory;
 
-	public CPU() {}
+	public CPU() {
+	}
 
 	public void setMemory(Memory memory) {
 		this.memory = memory;
 	}
 
 	/**
-	 *	Recebe e busca o proximo processo a ser alocado na CPU.
+	 * Recebe e busca o proximo processo a ser alocado na CPU.
 	 */
-	public void setIdProcess(Process idProcess) {
-		
-		process = idProcess;
-	}
-
-	public void setProcess(Process process) {
-		this.process = process;
+	public void setProcess(Process paramProcess) {
+		process = paramProcess;
 	}
 
 	/**
@@ -56,7 +52,7 @@ public class CPU {
 	 *
 	 * Para cada ciclo de processamento deverá ser realizado os seguintes processos:
 	 *
-	 * 	- Retirar um segundo do time burst do processo.
+	 * - Retirar um segundo do time burst do processo.
 	 */
 	public void run() {
 		updateProcessBurstTime();

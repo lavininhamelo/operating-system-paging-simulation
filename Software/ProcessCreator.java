@@ -70,7 +70,6 @@ public class ProcessCreator extends Thread {
 
 	@Override
 	public void run() {
-
 		int segundos = 0;
 
 		while (processosParaCriar.size() != processosCriados.size()) {
@@ -90,9 +89,6 @@ public class ProcessCreator extends Thread {
 			}
 
 			segundos++;
-
 		}
-
 	}
-
 }

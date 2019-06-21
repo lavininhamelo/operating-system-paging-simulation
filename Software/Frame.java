@@ -30,7 +30,7 @@ public class Frame {
   public Frame(int id) {
     this.id = id;
     this.reference = false;
-    this.page = new Page();
+    this.page = null;
   }
 
   public void setReference(boolean reference) {

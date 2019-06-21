@@ -55,18 +55,13 @@ public class Start {
 
 		// --------------------- Capturando configuraçoes gerais ---------------------
 
-		// Scanner in = new Scanner(System.in);
+		Scanner in = new Scanner(System.in);
 		int seed, numeroDeFrames, numeroDeProcessos, timeQuantum;
 
-		// seed = in.nextInt();
-		// numeroDeFrames = in.nextInt();
-		// numeroDeProcessos = in.nextInt();
-		// timeQuantum = in.nextInt();
-
-		seed = 1000;
-		numeroDeFrames = 1;
-		numeroDeProcessos = 1;
-		timeQuantum = 1;
+		seed = in.nextInt();
+		numeroDeFrames = in.nextInt();
+		numeroDeProcessos = in.nextInt();
+		timeQuantum = in.nextInt();
 
 		// --------------------- Capturando processos ---------------------
 
@@ -75,21 +70,18 @@ public class Start {
 		Collection<Process> processos = new Vector<>();
 		while (numeroDeProcessos > 0) {
 
-			// identificacaoProcesso = in.nextInt();
-			// numeroDePaginas = in.nextInt();
-			// tempoDeChegada = in.nextInt();
-			// tempoDeBurst = in.nextInt();
-
-			identificacaoProcesso = 3;
-			numeroDePaginas = 3;
-			tempoDeChegada = 5;
-			tempoDeBurst = 12;
+			identificacaoProcesso = in.nextInt();
+			numeroDePaginas = in.nextInt();
+			tempoDeChegada = in.nextInt();
+			tempoDeBurst = in.nextInt();
 
 			Process processo = new Process(identificacaoProcesso, numeroDePaginas, tempoDeChegada, tempoDeBurst);
 			processos.add(processo);
 
 			numeroDeProcessos--;
 		}
+
+		in.close();
 
 		// --------------------- Inicializando monitores ---------------------
 
@@ -120,6 +112,7 @@ public class Start {
 		memory.setDisk(disk);
 
 		roundRobinScheduler.setDispatcher(dispatcher);
+		roundRobinScheduler.setMemory(memory);
 		roundRobinScheduler.setTimer(timer);
 
 		dispatcher.setcPU(cPU);
@@ -157,9 +150,6 @@ public class Start {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
-		memory.printFreeFrames();
-		disk.printNotFinished();
 
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Término da observação");
 	}

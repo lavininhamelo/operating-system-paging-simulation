@@ -18,23 +18,23 @@ public class Memory extends Vector<Process> {
 	/**
 	 * Tamanho da memória.
 	 */
-	private static int tmp;
+	// private static int tmp;
 
 	/**
 	 * Tamanho da memória.
 	 */
-	private static int nframes;
+	// private static int nframes;
 
 	/**
 	 * Tamanho ocupado pelos processos.
 	 * 
 	 */
-	private static int tmpAllocated;
+	// private static int tmpAllocated;
 
 	/**
 	 * Comunicação com a CPU.
 	 */
-	private CPU cPU;
+	// private CPU cPU;
 
 	/**
 	 * Comunicação com o Disco.
@@ -49,10 +49,10 @@ public class Memory extends Vector<Process> {
 	private static Vector<Frame> quadros;
 
 	public Memory(int nframes) {
-		this.nframes = nframes;
+		// this.nframes = nframes;
 		// this.storage = new Vector<>();
 		// this.storage.add(new Partition(1, tmp));
-		this.quadros = new Vector<Frame>();
+		quadros = new Vector<Frame>();
 
 		for (int i = 0; i < nframes; i++) {
 			quadros.add(new Frame(i));
@@ -83,16 +83,16 @@ public class Memory extends Vector<Process> {
 			f.setPage(page);
 			quadros.add(f);
 
-			process.getPageTable().setReferenceBit(true);
-			process.getPageTable().setValidInvalidBit(true);
-			process.getPageTable().setFrameId(f.getId());
+			process.getPageTable(page).setReferenceBit(true);
+			process.getPageTable(page).setValidInvalidBit(true);
+			process.getPageTable(page).setFrameId(f.getId());
+			disk.setInvalidBit(f.getId(), page);
 
 		} else {
 			while (quadros.firstElement().isReference()) {
 				Frame f = quadros.remove(0);
 				f.setReference(false);
 				quadros.add(f);
-				System.out.println(f.getReference());
 			}
 
 			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
@@ -111,10 +111,13 @@ public class Memory extends Vector<Process> {
 			// }
 
 			quadros.add(f);
-			process.getPageTable().setReferenceBit(true);
-			process.getPageTable().setValidInvalidBit(true);
-			process.getPageTable().setFrameId(f.getId());
+			process.getPageTable(page).setReferenceBit(true);
+			process.getPageTable(page).setValidInvalidBit(true);
+			process.getPageTable(page).setFrameId(f.getId());
+			disk.setInvalidBit(f.getId(), page);
 
+			this.printFreeFrames();
+			disk.printNotFinished();
 		}
 	}
 

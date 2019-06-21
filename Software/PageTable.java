@@ -1,7 +1,5 @@
 package Software;
 
-import java.util.Vector;
-
 /**
  * Pages do Processo
  */
@@ -10,7 +8,7 @@ public class PageTable {
   /**
    * Identificação da página.
    */
-  private int pageId;
+  private Page page;
 
   /**
    * Bit de Refencia
@@ -26,19 +24,12 @@ public class PageTable {
 
   private int frameId;
 
-  public PageTable(int pageId) {
-    this.pageId = pageId;
+  public PageTable(int pageId, int processId) {
+
+    this.page = new Page(pageId, processId);
     this.referenceBit = false;
     this.validInvalidBit = false;
 
-  }
-
-  public void setId(int pageId) {
-    this.pageId = pageId;
-  }
-
-  public int getId() {
-    return this.pageId;
   }
 
   public void setValidInvalidBit(boolean validInvalidBit) {
@@ -63,6 +54,14 @@ public class PageTable {
 
   public int getFrameId() {
     return this.frameId;
+  }
+
+  public void setPage(Page page) {
+    this.page = page;
+  }
+
+  public Page getPage() {
+    return this.page;
   }
 
 }
