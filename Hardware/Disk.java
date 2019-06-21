@@ -76,10 +76,11 @@ public class Disk extends Vector<Process> {
 	}
 
 	public String printNotFinished(Process p) {
-		String str = "\n";
+		String str = "\nTabela de paginas:";
 		if (p.getTb() > 0) {
 			if (p.getTb() > 0 && !str.contains("Processo " + p.getId()))
-				str += "\n"+new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + p.getId() + ":\n\n";
+				str += "\n" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + p.getId()
+						+ ":\n\n";
 			for (PageTable a : p.getPageTable()) {
 				str += "\t\tidPagina: " + a.getPage().getId() + "	Bit Valido/Invalido: " + a.getValidInvalidBit()
 						+ "	Bit referencia: " + a.getReferenceBit() + "\n";
@@ -90,7 +91,8 @@ public class Disk extends Vector<Process> {
 
 		Process process : readyBuffer.getAll()) {
 			if (process.getTb() > 0)
-				str +="\n"+ new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + process.getId() + ":\n\n";
+				str += "\n" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + process.getId()
+						+ ":\n\n";
 			for (PageTable a : process.getPageTable()) {
 				str += "\t\tidPagina: " + a.getPage().getId() + "	Bit Valido/Invalido: " + a.getValidInvalidBit()
 						+ "	Bit referencia: " + a.getReferenceBit() + "\n";
@@ -100,7 +102,8 @@ public class Disk extends Vector<Process> {
 
 		for (Process process : storage) {
 			if (process.getTb() > 0 && !str.contains("Processo " + process.getId())) {
-				str += "\n"+new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + process.getId() + ":\n\n";
+				str += "\n" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + process.getId()
+						+ ":\n\n";
 				for (PageTable a : process.getPageTable()) {
 					str += "\t\tidPagina: " + a.getPage().getId() + "	Bit Valido/Invalido: " + a.getValidInvalidBit()
 							+ "	Bit referencia: " + a.getReferenceBit() + "\n";

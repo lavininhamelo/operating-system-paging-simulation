@@ -121,9 +121,9 @@ public class Memory extends Vector<Process> {
 				quadros.add(f);
 			}
 			this.countPageFaults++;
-			if(quadros.get(0).getPage()==null) {
-				System.out.println(
-						new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager percebe que há um quadro livre.");
+			if (quadros.get(0).getPage() == null) {
+				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
+						+ ".	Pager percebe que há um quadro livre.");
 				this.countPageFaults++;
 				Frame f = quadros.remove(0);
 				f.setReference(true);
@@ -137,31 +137,30 @@ public class Memory extends Vector<Process> {
 				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager lê do disco a página "
 						+ page.getId() + " solicitada e o coloca no quadro " + f.getId());
 
-			}else {
-			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-					+ ".	Pager percebe que não há quadros livres e substitui a página "
-					+ quadros.get(0).getPage().getId() +
-" na que está no quadro " + quadros.get(0).getId());
-			Frame f = quadros.remove(0);
-			// Process processBackup = this.getProcess(f.getPage().getIdProcess());
-			// System.out.println("----------------------------------------" +
-			// processBackup.getId());
-			writeInDisk(process);
-			f.setReference(true);
-			f.setPage(page);
+			} else {
+				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
+						+ ".	Pager percebe que não há quadros livres e substitui a página "
+						+ quadros.get(0).getPage().getId() + " na que está no quadro " + quadros.get(0).getId());
+				Frame f = quadros.remove(0);
+				// Process processBackup = this.getProcess(f.getPage().getIdProcess());
+				// System.out.println("----------------------------------------" +
+				// processBackup.getId());
+				writeInDisk(process);
+				f.setReference(true);
+				f.setPage(page);
 
-			// for (Frame frame : quadros) {
-			// frame.getPage()
-			// }
+				// for (Frame frame : quadros) {
+				// frame.getPage()
+				// }
 
-			quadros.add(f);
-			process.getPageTable(page).setReferenceBit(true);
-			process.getPageTable(page).setValidInvalidBit(true);
-			process.getPageTable(page).setFrameId(f.getId());
-			disk.setInvalidBit(f.getId(), page);
-			System.out.print(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager lê do disco a página "
-					+ page.getId() + " solicitada e o coloca no quadro " + f.getId() + "\n" + this.printFreeFrames()
-					+ disk.printNotFinished(process));
+				quadros.add(f);
+				process.getPageTable(page).setReferenceBit(true);
+				process.getPageTable(page).setValidInvalidBit(true);
+				process.getPageTable(page).setFrameId(f.getId());
+				disk.setInvalidBit(f.getId(), page);
+				System.out.print(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager lê do disco a página "
+						+ page.getId() + " solicitada e o coloca no quadro " + f.getId() + "\n" + this.printFreeFrames()
+						+ disk.printNotFinished(process));
 			}
 		}
 	}
