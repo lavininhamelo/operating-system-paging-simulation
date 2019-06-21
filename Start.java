@@ -159,6 +159,8 @@ public class Start {
 		}
 
 		memory.printFreeFrames();
+		disk.printNotFinished();
+
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Término da observação");
 	}
 }

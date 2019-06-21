@@ -1,6 +1,8 @@
 package Hardware;
 
 import java.util.Vector;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import Software.Page;
 import Software.Process;
@@ -66,21 +68,19 @@ public class Disk extends Vector<Process> {
 		return null;
 	}
 
-	// public void printNotFinished() {
-	// for (Process process : readyBuffer.getAll()) {
-	// if (process.getTb() > 0)
-	// System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ". O
-	// processo " + process.getId()
-	// + " não.");
-	// }
+	public void printNotFinished() {
+		for (Process process : readyBuffer.getAll()) {
+			if (process.getTb() > 0)
+				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ". O processo "
+						+ process.getId() + " não foi terminado.");
+		}
 
-	// for (Process process : this.storage) {
-	// if (process.getTb() > 0)
-	// System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ". O
-	// processo " + process.getId()
-	// + " não.");
-	// }
-	// }
+		for (Process process : this.storage) {
+			if (process.getTb() > 0)
+				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ". O processo "
+						+ process.getId() + " não foi terminado.");
+		}
+	}
 
 	/**
 	 * Aloca novo processo no disco.
