@@ -28,10 +28,6 @@ public class Process {
 	private int tb;
 
 	/**
-	 * Identificação da tabela de páginas.
-	 */
-
-	/**
 	 * Vetor de páginas
 	 */
 	private Vector<PageTable> pageTable;
@@ -108,7 +104,7 @@ public class Process {
 		return idFrame;
 	}
 
-	public boolean isPageValid(Page page) { 
+	public boolean isPageValid(Page page) {
 		boolean isValid = true;
 		for (PageTable a : pageTable) {
 			if (a.getPage().getId() == page.getId()) {

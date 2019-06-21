@@ -63,7 +63,7 @@ public class Pager extends Thread implements Runnable {
 		this.requestForTransferOfProcess = requestForTransferOfProcess;
 		this.requestForTransferOfPage = requestForTransferOfPage;
 	}
- 
+
 	/**
 	 * Aloca processo na memória.
 	 */
@@ -94,12 +94,11 @@ public class Pager extends Thread implements Runnable {
 
 		}
 
-		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Pager avisa o Despachante que a página " + requestForTransferOfPage.getId() + " do processo "
-				+ requestForTransferOfProcess.getId() + " está na memória");
+		System.out.println(
+				new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager avisa o Despachante que a página "
+						+ requestForTransferOfPage.getId() + " do processo " + requestForTransferOfProcess.getId()
+						+ " está na memória\n" + memory.printFreeFrames() + disk.printNotFinished());
 
-		memory.printFreeFrames();
-		disk.printNotFinished();
 	}
 
 	@Override

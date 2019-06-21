@@ -15,6 +15,12 @@ import Software.Process;
  */
 public class Memory extends Vector<Process> {
 
+	public static final String reset = "\u001B[0m";
+	public static final String red = "\u001B[31m";
+	public static final String blue = "\u001B[34m";
+	public static final String green = "\u001B[32m";
+	public static final String yellow = "\u001b[33m";
+
 	/**
 	 * Tamanho da memória.
 	 */
@@ -32,9 +38,9 @@ public class Memory extends Vector<Process> {
 	// private static int tmpAllocated;
 
 	/**
-	 * Comunicação com a CPU.
+	 * Contador de page faults.
 	 */
-	// private CPU cPU;
+	private int countPageFaults;
 
 	/**
 	 * Comunicação com o Disco.
@@ -52,6 +58,7 @@ public class Memory extends Vector<Process> {
 		// this.nframes = nframes;
 		// this.storage = new Vector<>();
 		// this.storage.add(new Partition(1, tmp));
+		this.countPageFaults = 0;
 		quadros = new Vector<Frame>();
 
 		for (int i = 0; i < nframes; i++) {
@@ -78,6 +85,7 @@ public class Memory extends Vector<Process> {
 		if (!quadros.firstElement().isReference() && quadros.firstElement().getPage() == null) {
 			System.out.println(
 					new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager percebe que há um quadro livre.");
+			this.countPageFaults++;
 			Frame f = quadros.remove(0);
 			f.setReference(true);
 			f.setPage(page);
@@ -87,11 +95,15 @@ public class Memory extends Vector<Process> {
 			process.getPageTable(page).setValidInvalidBit(true);
 			process.getPageTable(page).setFrameId(f.getId());
 			disk.setInvalidBit(f.getId(), page);
+			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager lê do disco a página "
+					+ page.getId() + " solicitada e o coloca no quadro " + quadros.get(0).getId());
 
 		} else {
+
 			while (quadros.firstElement().isReference()) {
 				Frame f = quadros.remove(0);
 				f.setReference(false);
+				this.countPageFaults++;
 				quadros.add(f);
 			}
 
@@ -115,9 +127,10 @@ public class Memory extends Vector<Process> {
 			process.getPageTable(page).setValidInvalidBit(true);
 			process.getPageTable(page).setFrameId(f.getId());
 			disk.setInvalidBit(f.getId(), page);
+			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager lê do disco a página "
+					+ page.getId() + " solicitada e o coloca no quadro " + quadros.get(0).getId() + "\n"
+					+ this.printFreeFrames() + disk.printNotFinished());
 
-			this.printFreeFrames();
-			disk.printNotFinished();
 		}
 	}
 
@@ -150,12 +163,22 @@ public class Memory extends Vector<Process> {
 	// return false;
 	// }
 
-	public void printFreeFrames() {
-		for (Frame frame : quadros) {
+	public String printFreeFrames() {
+		String str = "";
+		for (Frame frame : quadros)
 			if (frame.getPage() == null)
-				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	O quadro " + frame.getId()
-						+ " está livre.");
-		}
+				str += new SimpleDateFormat("HH:mm:ss").format(new Date()) + green + ".	O quadro " + frame.getId()
+						+ " está livre.\n" + reset;
+			else
+				str += new SimpleDateFormat("HH:mm:ss").format(new Date()) + yellow + ".	O quadro " + frame.getId()
+						+ " está ocupado.\n" + reset;
+
+		return str;
+	}
+
+	public void printPageFaults() {
+		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	O número total de page faults foi "
+				+ this.countPageFaults + ".");
 	}
 
 	// public boolean checkMemorySpace(int tp) {}

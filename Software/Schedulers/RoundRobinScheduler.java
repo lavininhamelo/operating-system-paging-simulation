@@ -19,7 +19,10 @@ import java.util.Date;
  * CPU.
  */
 public class RoundRobinScheduler extends Thread implements Runnable {
-
+	public static final String reset = "\u001B[0m";
+	public static final String red = "\u001B[31m";
+	public static final String blue = "\u001B[34m";
+	public static final String green = "\u001B[32m";
 	/**
 	 * Time quantum.
 	 */
@@ -38,7 +41,7 @@ public class RoundRobinScheduler extends Thread implements Runnable {
 	/**
 	 * Comunicação com o disco.
 	 */
-	private static Disk disk;
+	private Disk disk;
 
 	/**
 	 * Comunicação com o Dispatcher.
@@ -103,6 +106,10 @@ public class RoundRobinScheduler extends Thread implements Runnable {
 		return process;
 	}
 
+	public void setDisk(Disk disk) {
+		this.disk = disk;
+	}
+
 	public void setStatusProcess(String statusProcess) {
 		this.statusProcess = statusProcess;
 	}
@@ -149,13 +156,12 @@ public class RoundRobinScheduler extends Thread implements Runnable {
 
 		else
 
-			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + process.getId()
-					+ " terminou sua execução");
+			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + green + ".	Processo "
+					+ process.getId() + " terminou sua execução." + reset + "\n" + memory.printFreeFrames()
+					+ disk.printNotFinished());
 
 		process = null;
 
-		memory.printFreeFrames();
-		// disk.printNotFinished();
 	}
 
 	/**

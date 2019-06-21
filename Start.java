@@ -51,6 +51,11 @@ public class Start {
 	private static Disk disk;
 	private static Memory memory;
 
+	public static final String reset = "\u001B[0m";
+	public static final String red = "\u001B[31m";
+	public static final String blue = "\u001B[34m";
+	public static final String green = "\u001B[32m";
+
 	public static void main(String[] args) {
 
 		// --------------------- Capturando configuraçoes gerais ---------------------
@@ -114,6 +119,7 @@ public class Start {
 		roundRobinScheduler.setDispatcher(dispatcher);
 		roundRobinScheduler.setMemory(memory);
 		roundRobinScheduler.setTimer(timer);
+		roundRobinScheduler.setDisk(disk);
 
 		dispatcher.setcPU(cPU);
 		dispatcher.setMemory(memory);
@@ -151,6 +157,7 @@ public class Start {
 			e.printStackTrace();
 		}
 
+		memory.printPageFaults();
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Término da observação");
 	}
 }

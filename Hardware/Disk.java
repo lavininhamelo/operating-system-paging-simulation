@@ -15,6 +15,12 @@ import Software.Buffers.ReadyBuffer;
  */
 public class Disk extends Vector<Process> {
 
+	public static final String reset = "\u001B[0m";
+	public static final String red = "\u001B[31m";
+	public static final String blue = "\u001B[34m";
+	public static final String green = "\u001B[32m";
+	public static final String yellow = "\u001b[33m";
+
 	/**
 	 * Comunicação com a Memória.
 	 */
@@ -69,19 +75,30 @@ public class Disk extends Vector<Process> {
 		return null;
 	}
 
-	public void printNotFinished() {
-		for (Process process : readyBuffer.getAll()) {
+	public String printNotFinished() {
+		String str = "";
+		for (Process process : readyBuffer) {
 			if (process.getTb() > 0)
-				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	O processo "
-						+ process.getId() + " não foi terminado.");
+				str += new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + process.getId() + ":\n\n";
+			for (PageTable a : process.getPageTable()) {
+				str += "\t\tidPagina: " + a.getPage().getId() + "	Bit Valido/Invalido: " + a.getValidInvalidBit()
+						+ "	Bit referencia: " + a.getReferenceBit() + "\n";
+			}
+
 		}
 
 		for (Process process : storage) {
-			if (process.getTb() > 0)
-				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	O processo "
-						+ process.getId() + " não foi terminado.");
+			if (process.getTb() > 0 && !str.contains("Processo " + process.getId())) {
+				str += new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + process.getId() + ":\n\n";
+				for (PageTable a : process.getPageTable()) {
+					str += "\t\tidPagina: " + a.getPage().getId() + "	Bit Valido/Invalido: " + a.getValidInvalidBit()
+							+ "	Bit referencia: " + a.getReferenceBit() + "\n";
+				}
+			}
+
 		}
-	} 
+		return str;
+	}
 
 	/**
 	 * Aloca novo processo no disco.
@@ -94,7 +111,7 @@ public class Disk extends Vector<Process> {
 	public void setInvalidBit(int idFrame, Page page) {
 		for (Process p : storage) {
 			for (PageTable a : p.getPageTable()) {
-				if (a.getFrameId() == idFrame&&page.getIdProcess()!=a.getPage().getIdProcess()) {
+				if (a.getFrameId() == idFrame && page.getIdProcess() != a.getPage().getIdProcess()) {
 					a.setValidInvalidBit(false);
 				}
 			}
@@ -102,7 +119,7 @@ public class Disk extends Vector<Process> {
 		}
 		for (Process p : readyBuffer) {
 			for (PageTable a : p.getPageTable()) {
-				if (a.getFrameId() == idFrame&&page.getIdProcess()!=a.getPage().getIdProcess()) {
+				if (a.getFrameId() == idFrame && page.getIdProcess() != a.getPage().getIdProcess()) {
 					a.setValidInvalidBit(false);
 				}
 			}
