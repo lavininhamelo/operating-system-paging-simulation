@@ -177,8 +177,8 @@ public class Memory extends Vector<Process> {
 	}
 
 	public void printPageFaults() {
-		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	O número total de page faults foi "
-				+ this.countPageFaults + ".");
+		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + red
+				+ ".	O número total de page faults foi " + this.countPageFaults + "." + reset);
 	}
 
 	// public boolean checkMemorySpace(int tp) {}
