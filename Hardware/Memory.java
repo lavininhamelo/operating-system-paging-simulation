@@ -110,7 +110,7 @@ public class Memory extends Vector<Process> {
 			process.getPageTable(page).setFrameId(f.getId());
 			disk.setInvalidBit(f.getId(), page);
 			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager lê do disco a página "
-					+ page.getId() + " solicitada e o coloca no quadro " + quadros.get(0).getId());
+					+ page.getId() + " solicitada e o coloca no quadro " + f.getId());
 
 		} else {
 
@@ -142,8 +142,8 @@ public class Memory extends Vector<Process> {
 			process.getPageTable(page).setFrameId(f.getId());
 			disk.setInvalidBit(f.getId(), page);
 			System.out.print(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager lê do disco a página "
-					+ page.getId() + " solicitada e o coloca no quadro " + quadros.get(0).getId() + "\n"
-					+ this.printFreeFrames() + disk.printNotFinished(process));
+					+ page.getId() + " solicitada e o coloca no quadro " + f.getId() + "\n" + this.printFreeFrames()
+					+ disk.printNotFinished(process));
 
 		}
 	}
@@ -192,7 +192,7 @@ public class Memory extends Vector<Process> {
 
 	public void printPageFaults() {
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + red
-				+ ".	O número total de page faults foi " + this.countPageFaults + "." + reset);
+				+ ".	O número total de page faults foi " + this.countPageFaults + ". " + reset);
 	}
 
 	// public boolean checkMemorySpace(int tp) {}
