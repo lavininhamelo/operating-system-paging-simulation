@@ -86,7 +86,7 @@ public class Process {
 	}
 
 	public Page getPageById(int id) {
-		int novoId = np%id;
+		int novoId = np % id;
 		Page p = new Page();
 		for (Page a : paginas) {
 			if (a.getId() == novoId) {
@@ -96,8 +96,8 @@ public class Process {
 		return p;
 	}
 
-	public int getIdFrame(int idPage) {
-		return this.pageTable.getId();
+	public int getIdFrame() {
+		return this.pageTable.getFrameId();
 	}
 
 	public boolean isPageValid(Page page) {

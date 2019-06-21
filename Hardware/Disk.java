@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import Software.Page;
 import Software.Process;
+import Software.Buffers.ReadyBuffer;
 
 /**
  * Responsável por armazenar e gerenciar os processos que não poderam ser
@@ -16,6 +17,8 @@ public class Disk extends Vector<Process> {
 	 */
 	private Memory memory;
 
+	private static ReadyBuffer readyBuffer;
+
 	/**
 	 * Grupo para alocação e manipulação dos processos no Disco.
 	 */
@@ -23,10 +26,15 @@ public class Disk extends Vector<Process> {
 
 	public Disk() {
 		this.storage = new Vector<Process>();
+		readyBuffer = new ReadyBuffer();
 	}
 
 	public void setMemory(Memory memory) {
 		this.memory = memory;
+	}
+
+	public void setReadyBuffer(ReadyBuffer readyBuffer) {
+		this.readyBuffer = readyBuffer;
 	}
 
 	/**
@@ -58,12 +66,38 @@ public class Disk extends Vector<Process> {
 		return null;
 	}
 
+	// public void printNotFinished() {
+	// for (Process process : readyBuffer.getAll()) {
+	// if (process.getTb() > 0)
+	// System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ". O
+	// processo " + process.getId()
+	// + " não.");
+	// }
+
+	// for (Process process : this.storage) {
+	// if (process.getTb() > 0)
+	// System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ". O
+	// processo " + process.getId()
+	// + " não.");
+	// }
+	// }
+
 	/**
 	 * Aloca novo processo no disco.
 	 */
 	@Override
-	public boolean add(Process Process) {
-		return storage.add(Process);
+	public boolean add(Process process) {
+		return storage.add(process);
 	}
+
+	public void setInvalidBit(int idFrame ){
+		for(Process p :storage){
+			if(p.getPageTable().getFrameId()==idFrame)
+				p.getPageTable().setValidInvalidBit(false);
+		}
+		for(Process p :readyBuffer){
+			if(p.getPageTable().getFrameId()==idFrame)
+				p.getPageTable().setValidInvalidBit(false);
+		}
 
 }

@@ -24,6 +24,8 @@ public class PageTable {
 
   private boolean validInvalidBit;
 
+  private int frameId;
+
   public PageTable(int pageId) {
     this.pageId = pageId;
     this.referenceBit = false;
@@ -53,6 +55,14 @@ public class PageTable {
 
   public boolean getReferenceBit() {
     return this.referenceBit;
+  }
+
+  public void setFrameId(int frameId) {
+    this.frameId = frameId;
+  }
+
+  public int getFrameId() {
+    return this.frameId;
   }
 
 }

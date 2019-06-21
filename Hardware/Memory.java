@@ -73,6 +73,7 @@ public class Memory extends Vector<Process> {
 	/**
 	 * Aloca nova página na memória com Second Chance.
 	 */
+
 	public void addProcess(Process process, Page page) {
 		if (!quadros.firstElement().isReference() && quadros.firstElement().getPage() == null) {
 			System.out.println(
@@ -81,9 +82,10 @@ public class Memory extends Vector<Process> {
 			f.setReference(true);
 			f.setPage(page);
 			quadros.add(f);
- 
+
 			process.getPageTable().setReferenceBit(true);
 			process.getPageTable().setValidInvalidBit(true);
+			process.getPageTable().setFrameId(f.getId());
 
 		} else {
 			while (quadros.firstElement().isReference()) {
@@ -111,6 +113,7 @@ public class Memory extends Vector<Process> {
 			quadros.add(f);
 			process.getPageTable().setReferenceBit(true);
 			process.getPageTable().setValidInvalidBit(true);
+			process.getPageTable().setFrameId(f.getId());
 
 		}
 	}
@@ -134,14 +137,22 @@ public class Memory extends Vector<Process> {
 	/**
 	 * Verifica se o 'process' correspondente a algum processo alocado na memória.
 	 */
-	public boolean contains(Process process) {
-		for (Frame frame : quadros) {
-			if (frame.getPage() != null)
-				if (frame.getPage().getIdProcess() == process.getId())
-					return true;
-		}
+	// public boolean contains(Process process) {
+	// for (Frame frame : quadros) {
+	// if (frame.getPage() != null)
+	// if (frame.getPage().getIdProcess() == process.getId())
+	// return true;
+	// }
 
-		return false;
+	// return false;
+	// }
+
+	public void printFreeFrames() {
+		for (Frame frame : quadros) {
+			if (frame.getPage() == null)
+				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	O quadro " + frame.getId()
+						+ " está livre.");
+		}
 	}
 
 	// public boolean checkMemorySpace(int tp) {}

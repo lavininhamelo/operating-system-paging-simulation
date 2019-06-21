@@ -158,6 +158,7 @@ public class Start {
 			e.printStackTrace();
 		}
 
+		memory.printFreeFrames();
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Término da observação");
 	}
 }

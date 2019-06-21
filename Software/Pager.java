@@ -57,14 +57,14 @@ public class Pager extends Thread implements Runnable {
 
 	public void setStatusRoundRobinScheduler(String statusRoundRobinScheduler) {
 		this.statusRoundRobinScheduler = statusRoundRobinScheduler;
-	} 
+	}
 
 	public void setRequestForTransferOfProcess(Process requestForTransferOfProcess, Page requestForTransferOfPage) {
 		this.requestForTransferOfProcess = requestForTransferOfProcess;
 		this.requestForTransferOfPage = requestForTransferOfPage;
-	}
+	} 
 
-	/**
+	/** 
 	 * Aloca processo na memória.
 	 */
 	public synchronized void putProcessInToMemory(Process process, Page page) {
@@ -78,8 +78,9 @@ public class Pager extends Thread implements Runnable {
 
 		disk.writeInMemory(requestForTransferOfProcess, requestForTransferOfPage);
 
-		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager traz processo "
-				+ requestForTransferOfProcess.getId() + " do disco e o coloca na memória");
+		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager traz a página "
+				+ requestForTransferOfPage.getId() + " do processo " + requestForTransferOfProcess.getId()
+				+ " do disco e o coloca na memória");
 	}
 
 	/**
@@ -93,9 +94,9 @@ public class Pager extends Thread implements Runnable {
 
 		}
 
-		System.out.println(
-				new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager avisa o Despachante que o processo "
-						+ requestForTransferOfProcess.getId() + " está na memória");
+		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
+				+ ".	Pager avisa o Despachante que a página " + requestForTransferOfPage.getId() + " do processo "
+				+ requestForTransferOfProcess.getId() + " está na memória");
 
 	}
 
@@ -103,7 +104,6 @@ public class Pager extends Thread implements Runnable {
 	public void run() {
 
 		while (!statusRoundRobinScheduler.equals("concluded")) {
-
 			
 			if (requestForTransferOfProcess != null) {
 				transferToMemory();

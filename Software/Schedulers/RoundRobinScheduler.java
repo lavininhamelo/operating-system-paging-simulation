@@ -12,9 +12,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Responsávelo por realizar o escalonamento dos processos que serão alocados na CPU.
+ * Responsávelo por realizar o escalonamento dos processos que serão alocados na
+ * CPU.
  */
-public class RoundRobinScheduler extends Thread implements Runnable{
+public class RoundRobinScheduler extends Thread implements Runnable {
 
 	/**
 	 * Time quantum.
@@ -56,15 +57,16 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 	 */
 	private String statusProcess;
 
-	public RoundRobinScheduler(int tq, MonitorRoundRobinDispatcher monitorDispatcher, MonitorRoundRobinTimer monitorTimer) {
+	public RoundRobinScheduler(int tq, MonitorRoundRobinDispatcher monitorDispatcher,
+			MonitorRoundRobinTimer monitorTimer) {
 		this.tq = tq;
 		readyBuffer = new ReadyBuffer();
 		this.monitorDispatcher = monitorDispatcher;
 		this.monitorTimer = monitorTimer;
 		statusProcess = "";
 	}
-	
-	public void setDispatcher(Dispatcher dispatcher){
+
+	public void setDispatcher(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 	}
 
@@ -89,7 +91,9 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 	}
 
 	/**
-	 * Verifica se há processos na fila de prontos. Caso positivo, o método busca e remove o processo que possui menor CPU burst time da fila, que será o processo selecionado para ser alocado na CPU.
+	 * Verifica se há processos na fila de prontos. Caso positivo, o método busca e
+	 * remove o processo que possui menor CPU burst time da fila, que será o
+	 * processo selecionado para ser alocado na CPU.
 	 */
 	public void chooseProcess() {
 
@@ -107,7 +111,8 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 	}
 
 	/**
-	 * Envia o processo escolhido para o dispatcher solicitando que o processo seja alocado na CPU.
+	 * Envia o processo escolhido para o dispatcher solicitando que o processo seja
+	 * alocado na CPU.
 	 */
 	private void sendProcessToDispatcher() {
 
@@ -116,7 +121,8 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 	}
 
 	/**
-	 *  Verifica se o processo ainda possui Time CPU Burst e caso positivo retorna o processo para a fila de prontos.
+	 * Verifica se o processo ainda possui Time CPU Burst e caso positivo retorna o
+	 * processo para a fila de prontos.
 	 */
 	private void returnProcessToReadyBuffer() {
 
@@ -126,8 +132,7 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 
 		else
 
-			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-					+ ".	Processo " + process.getId()
+			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + process.getId()
 					+ " terminou sua execução");
 
 		process = null;
@@ -152,7 +157,7 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 	 *
 	 * Para cada ciclo de tempo deverá ser realizado os seguintes processos:
 	 *
-	 * 	- Verificação da fila de prontos para alocação de novos processos na CPU.
+	 * - Verificação da fila de prontos para alocação de novos processos na CPU.
 	 *
 	 */
 	public void run() {

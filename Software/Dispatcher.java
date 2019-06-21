@@ -154,7 +154,7 @@ public class Dispatcher extends Thread {
 
 			requestTransferToMemory(process, page);
 
-		} 
+		}
 
 	}
 
@@ -177,7 +177,7 @@ public class Dispatcher extends Thread {
 
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
 				+ ".	Despachante é avisado pelo Pager que a pagina " + page.getId() + " do processo "
-				+ process.getId() + " esta no quadro " + process.getIdFrame(page.getId()));
+				+ process.getId() + " esta no quadro " + process.getIdFrame());
 
 		dispatchProcess();
 
@@ -195,7 +195,6 @@ public class Dispatcher extends Thread {
 	 * à CPU.
 	 */
 	private void freeUpCPU() {
-		
 
 		timer.setTimer(roundRobinScheduler.getTq());
 		cPU.setIdProcess(process);
@@ -236,7 +235,6 @@ public class Dispatcher extends Thread {
 				process = null;
 
 				notifyTimer();
-				
 
 			}
 
@@ -245,8 +243,7 @@ public class Dispatcher extends Thread {
 			} catch (InterruptedException e) {
 				throw new IllegalStateException();
 			}
-			
-		
+
 		}
 
 		timer.setStatusRoundRobinScheduler("concluded");
