@@ -94,10 +94,10 @@ public class Pager extends Thread implements Runnable {
 
 		}
 
-		System.out.println(
-				new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager avisa o Despachante que a página "
-						+ requestForTransferOfPage.getId() + " do processo " + requestForTransferOfProcess.getId()
-						+ " está na memória\n" + memory.printFreeFrames() + disk.printNotFinished());
+		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
+				+ ".	Pager avisa o Despachante que a página " + requestForTransferOfPage.getId() + " do processo "
+				+ requestForTransferOfProcess.getId() + " está na memória\n" + memory.printFreeFrames()
+				+ disk.printNotFinished(requestForTransferOfProcess));
 
 	}
 

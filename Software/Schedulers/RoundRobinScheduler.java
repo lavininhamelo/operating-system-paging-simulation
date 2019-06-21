@@ -154,12 +154,15 @@ public class RoundRobinScheduler extends Thread implements Runnable {
 
 			readyBuffer.add(process);
 
-		else
+		else {
+			if (process.getTb() <= 0)
+				memory.freeFremes(process);
 
 			System.out.print(new SimpleDateFormat("HH:mm:ss").format(new Date()) + green + ".	Processo "
 					+ process.getId() + " terminou sua execução." + reset + "\n" + memory.printFreeFrames()
-					+ disk.printNotFinished());
+					+ disk.printNotFinished(process));
 
+		}
 		process = null;
 
 	}

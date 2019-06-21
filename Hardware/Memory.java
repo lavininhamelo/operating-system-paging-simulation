@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Vector;
 
 import Software.Page;
+import Software.PageTable;
 import Software.Process;
 
 /**
@@ -77,6 +78,19 @@ public class Memory extends Vector<Process> {
 		disk.add(process);
 	}
 
+	public void freeFremes(Process p) {
+		for (PageTable pt : p.getPageTable()) {
+			for (Frame f : quadros) {
+				if (f.getId() == pt.getFrameId()) {
+					f.setPage(null);
+					f.setReference(false);
+				}
+
+			}
+		}
+
+	}
+
 	/**
 	 * Aloca nova página na memória com Second Chance.
 	 */
@@ -103,6 +117,7 @@ public class Memory extends Vector<Process> {
 			while (quadros.firstElement().isReference()) {
 				Frame f = quadros.remove(0);
 				f.setReference(false);
+				disk.setFrames(process, f.getId());
 				quadros.add(f);
 			}
 			this.countPageFaults++;
@@ -128,7 +143,7 @@ public class Memory extends Vector<Process> {
 			disk.setInvalidBit(f.getId(), page);
 			System.out.print(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager lê do disco a página "
 					+ page.getId() + " solicitada e o coloca no quadro " + quadros.get(0).getId() + "\n"
-					+ this.printFreeFrames() + disk.printNotFinished());
+					+ this.printFreeFrames() + disk.printNotFinished(process));
 
 		}
 	}

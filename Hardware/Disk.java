@@ -75,9 +75,20 @@ public class Disk extends Vector<Process> {
 		return null;
 	}
 
-	public String printNotFinished() {
+	public String printNotFinished(Process p) {
 		String str = "\n";
-		for (Process process : readyBuffer.getAll()) {
+		if (p.getTb() > 0) {
+			if (p.getTb() > 0 && !str.contains("Processo " + p.getId()))
+				str += new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + p.getId() + ":\n\n";
+			for (PageTable a : p.getPageTable()) {
+				str += "\t\tidPagina: " + a.getPage().getId() + "	Bit Valido/Invalido: " + a.getValidInvalidBit()
+						+ "	Bit referencia: " + a.getReferenceBit() + "\n";
+			}
+		}
+
+		for (
+
+		Process process : readyBuffer.getAll()) {
 			if (process.getTb() > 0)
 				str += new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + process.getId() + ":\n\n";
 			for (PageTable a : process.getPageTable()) {
@@ -109,18 +120,43 @@ public class Disk extends Vector<Process> {
 		return storage.add(process);
 	}
 
+	public void setFrames(Process p, int idFrame) {
+		for (PageTable pt : p.getPageTable()) {
+			if (idFrame == pt.getFrameId()) {
+				pt.setReferenceBit(false);
+			}
+		}
+		for (Process process : storage) {
+			for (PageTable pt : process.getPageTable()) {
+				if (idFrame == pt.getFrameId()) {
+					pt.setReferenceBit(false);
+				}
+			}
+		}
+		for (Process process : readyBuffer.getAll()) {
+			for (PageTable pt : process.getPageTable()) {
+				if (idFrame == pt.getFrameId()) {
+					pt.setReferenceBit(false);
+				}
+			}
+		}
+	}
+
 	public void setInvalidBit(int idFrame, Page page) {
+
 		for (Process p : storage) {
 			for (PageTable a : p.getPageTable()) {
-				if (a.getFrameId() == idFrame && page.getIdProcess() != a.getPage().getIdProcess()) {
+				if (a.getFrameId() == idFrame && page.getIdProcess() != a.getPage().getIdProcess()
+						&& page.getId() != a.getPage().getId()) {
 					a.setValidInvalidBit(false);
 				}
 			}
 
 		}
-		for (Process p : readyBuffer) {
+		for (Process p : readyBuffer.getAll()) {
 			for (PageTable a : p.getPageTable()) {
-				if (a.getFrameId() == idFrame && page.getIdProcess() != a.getPage().getIdProcess()) {
+				if (a.getFrameId() == idFrame && page.getIdProcess() != a.getPage().getIdProcess()
+						&& page.getId() != a.getPage().getId()) {
 					a.setValidInvalidBit(false);
 				}
 			}
