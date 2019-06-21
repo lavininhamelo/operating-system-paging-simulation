@@ -13,10 +13,6 @@ public class PageTable {
   private int pageId;
 
   /**
-   * Identificação da página.
-   */
-  
-  /**
    * Bit de Refencia
    */
 
@@ -27,12 +23,6 @@ public class PageTable {
    */
 
   private boolean validInvalidBit;
-
-  /**
-   * Contador para percorrer os Frames.
-   */
-  private int count;
-
 
   public PageTable(int pageId) {
     this.pageId = pageId;
@@ -64,6 +54,5 @@ public class PageTable {
   public boolean getReferenceBit() {
     return this.referenceBit;
   }
-
 
 }

@@ -21,7 +21,6 @@ public class ProcessCreator extends Thread {
 	 */
 	private static InputBuffer inputBuffer;
 
-
 	/**
 	 * Comunicação com o ReadyBuffer.
 	 */
@@ -59,8 +58,7 @@ public class ProcessCreator extends Thread {
 		readyBuffer.add(process);
 
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Criador de processos criou o processo " + process.getId()
-				+ " e o colocou na fila de prontos");
+				+ ".	Criador de processos criou o processo " + process.getId() + " e o colocou na fila de prontos");
 
 		processosCriados.add(process);
 		disk.add(process);

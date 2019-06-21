@@ -50,7 +50,7 @@ public class Process {
 		for (int i = 0; i < np; i++) {
 			paginas.add(new Page(i, id));
 		}
-		this.pageTable= new PageTable(id);
+		this.pageTable = new PageTable(id);
 	}
 
 	public void setId(int id) {
@@ -100,12 +100,7 @@ public class Process {
 	}
 
 	public boolean isPageValid(Page page) {
-
-		if (pageTable.getValidInvalidBit()) 
-			return true;
-		else
-		return false;
-
+		return pageTable.getValidInvalidBit();
 	}
 
 	public int getPageTableId() {
@@ -123,7 +118,5 @@ public class Process {
 	public void setPageTable(PageTable pageTable) {
 		this.pageTable = pageTable;
 	}
-
-	
 
 }

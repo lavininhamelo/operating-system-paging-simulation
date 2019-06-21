@@ -6,7 +6,8 @@ import Software.Page;
 import Software.Process;
 
 /**
- * Responsável por armazenar e gerenciar os processos que não poderam ser alocados na memória.
+ * Responsável por armazenar e gerenciar os processos que não poderam ser
+ * alocados na memória.
  */
 public class Disk extends Vector<Process> {
 
@@ -21,7 +22,7 @@ public class Disk extends Vector<Process> {
 	private static Vector<Process> storage;
 
 	public Disk() {
-		this.storage = new Vector<>();
+		this.storage = new Vector<Process>();
 	}
 
 	public void setMemory(Memory memory) {
@@ -29,21 +30,22 @@ public class Disk extends Vector<Process> {
 	}
 
 	/**
-	 * Retira o processo do disco e transfere para a memória. O processo a ser transferido é especificado pelo parâmetro de entrada ‘idProcess’ deste método.
+	 * Retira o processo do disco e transfere para a memória. O processo a ser
+	 * transferido é especificado pelo parâmetro de entrada ‘idProcess’ deste
+	 * método.
 	 */
-	public void writeInMemory(int idProcess, Page page) {
+	public void writeInMemory(Process process, Page page) {
 
-		Process process = getProcess(idProcess);
-		System.out.println(process.getId());
-
+		// if (process != null) {
 		memory.addProcess(process, page);
-
 		storage.remove(process);
+		// }
 
 	}
 
 	/**
-	 * Retorna o processo alocado na memória especificado pelo parâmetro de entrada 'idProcess'.
+	 * Retorna o processo alocado na memória especificado pelo parâmetro de entrada
+	 * 'idProcess'.
 	 */
 	public Process getProcess(int idProcess) {
 
@@ -61,9 +63,7 @@ public class Disk extends Vector<Process> {
 	 */
 	@Override
 	public boolean add(Process Process) {
-
 		return storage.add(Process);
-		
 	}
 
 }

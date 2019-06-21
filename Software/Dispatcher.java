@@ -21,8 +21,7 @@ public class Dispatcher extends Thread {
 	 * Comunicação com o RoundRobinScheduler.
 	 */
 	private RoundRobinScheduler roundRobinScheduler;
-	
-	
+
 	private Random ger = new Random();
 
 	/**
@@ -147,7 +146,7 @@ public class Dispatcher extends Thread {
 
 		}
 
-		else if  (!process.isPageValid(page)){
+		else if (!process.isPageValid(page)) {
 
 			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
 					+ ".	Despachante percebe que a pagina " + page.getId() + " do processo " + process.getId()
@@ -188,7 +187,7 @@ public class Dispatcher extends Thread {
 	 * Calcula uma página aleatória do processo.
 	 */
 	public int chooseProcessPage(Process process) {
-	return  ger.nextInt(seed);
+		return ger.nextInt(seed);
 	}
 
 	/**
