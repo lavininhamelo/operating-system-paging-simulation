@@ -86,9 +86,10 @@ public class Process {
 	}
 
 	public Page getPageById(int id) {
+		int novoId = np%id;
 		Page p = new Page();
 		for (Page a : paginas) {
-			if (a.getId() == id) {
+			if (a.getId() == novoId) {
 				p = a;
 			}
 		}

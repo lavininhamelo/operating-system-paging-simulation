@@ -57,7 +57,7 @@ public class Pager extends Thread implements Runnable {
 
 	public void setStatusRoundRobinScheduler(String statusRoundRobinScheduler) {
 		this.statusRoundRobinScheduler = statusRoundRobinScheduler;
-	}
+	} 
 
 	public void setRequestForTransferOfProcess(Process requestForTransferOfProcess, Page requestForTransferOfPage) {
 		this.requestForTransferOfProcess = requestForTransferOfProcess;
@@ -104,7 +104,7 @@ public class Pager extends Thread implements Runnable {
 
 		while (!statusRoundRobinScheduler.equals("concluded")) {
 
-			System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" + requestForTransferOfProcess.getId());
+			
 			if (requestForTransferOfProcess != null) {
 				transferToMemory();
 				notifyDispatcher();

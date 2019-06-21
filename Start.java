@@ -55,13 +55,18 @@ public class Start {
 
 		// --------------------- Capturando configuraçoes gerais ---------------------
 
-		Scanner in = new Scanner(System.in);
+		// Scanner in = new Scanner(System.in);
 		int seed, numeroDeFrames, numeroDeProcessos, timeQuantum;
 
-		seed = in.nextInt();
-		numeroDeFrames = in.nextInt();
-		numeroDeProcessos = in.nextInt();
-		timeQuantum = in.nextInt();
+		// seed = in.nextInt();
+		// numeroDeFrames = in.nextInt();
+		// numeroDeProcessos = in.nextInt();
+		// timeQuantum = in.nextInt();
+
+		seed = 1000;
+		numeroDeFrames = 1;
+		numeroDeProcessos = 1;
+		timeQuantum = 1;
 
 		// --------------------- Capturando processos ---------------------
 
@@ -70,10 +75,15 @@ public class Start {
 		Collection<Process> processos = new Vector<>();
 		while (numeroDeProcessos > 0) {
 
-			identificacaoProcesso = in.nextInt();
-			numeroDePaginas = in.nextInt();
-			tempoDeChegada = in.nextInt();
-			tempoDeBurst = in.nextInt();
+			// identificacaoProcesso = in.nextInt();
+			// numeroDePaginas = in.nextInt();
+			// tempoDeChegada = in.nextInt();
+			// tempoDeBurst = in.nextInt();
+
+			identificacaoProcesso = 3;
+			numeroDePaginas = 3;
+			tempoDeChegada = 5;
+			tempoDeBurst = 12;
 
 			Process processo = new Process(identificacaoProcesso, numeroDePaginas, tempoDeChegada, tempoDeBurst);
 			processos.add(processo);
@@ -102,9 +112,9 @@ public class Start {
 		timer = new Timer(roundRobinScheduler, monitorRT, monitorDT);
 
 		// --------------------- Configurando componentes ---------------------
-		
+
 		processCreator.setDisk(disk);
-		
+
 		cPU.setMemory(memory);
 		disk.setMemory(memory);
 		memory.setDisk(disk);

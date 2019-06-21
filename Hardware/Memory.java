@@ -81,8 +81,9 @@ public class Memory extends Vector<Process> {
 			f.setReference(true);
 			f.setPage(page);
 			quadros.add(f);
-
+ 
 			process.getPageTable().setReferenceBit(true);
+			process.getPageTable().setValidInvalidBit(true);
 
 		} else {
 			while (quadros.firstElement().isReference()) {
@@ -109,6 +110,7 @@ public class Memory extends Vector<Process> {
 
 			quadros.add(f);
 			process.getPageTable().setReferenceBit(true);
+			process.getPageTable().setValidInvalidBit(true);
 
 		}
 	}

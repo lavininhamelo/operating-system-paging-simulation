@@ -154,7 +154,7 @@ public class Dispatcher extends Thread {
 
 			requestTransferToMemory(process, page);
 
-		}
+		} 
 
 	}
 
@@ -195,9 +195,10 @@ public class Dispatcher extends Thread {
 	 * à CPU.
 	 */
 	private void freeUpCPU() {
+		
 
 		timer.setTimer(roundRobinScheduler.getTq());
-		cPU.setIdProcess(process.getId());
+		cPU.setIdProcess(process);
 
 	}
 
@@ -235,6 +236,7 @@ public class Dispatcher extends Thread {
 				process = null;
 
 				notifyTimer();
+				
 
 			}
 
@@ -243,7 +245,8 @@ public class Dispatcher extends Thread {
 			} catch (InterruptedException e) {
 				throw new IllegalStateException();
 			}
-
+			
+		
 		}
 
 		timer.setStatusRoundRobinScheduler("concluded");
