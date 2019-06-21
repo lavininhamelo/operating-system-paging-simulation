@@ -103,10 +103,9 @@ public class Memory extends Vector<Process> {
 			while (quadros.firstElement().isReference()) {
 				Frame f = quadros.remove(0);
 				f.setReference(false);
-				this.countPageFaults++;
 				quadros.add(f);
 			}
-
+			this.countPageFaults++;
 			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
 					+ ".	Pager percebe que não há quadros livres e substitui a página "
 					+ quadros.get(0).getPage().getId() + " na que está no quadro " + quadros.get(0).getId());
@@ -127,7 +126,7 @@ public class Memory extends Vector<Process> {
 			process.getPageTable(page).setValidInvalidBit(true);
 			process.getPageTable(page).setFrameId(f.getId());
 			disk.setInvalidBit(f.getId(), page);
-			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager lê do disco a página "
+			System.out.print(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager lê do disco a página "
 					+ page.getId() + " solicitada e o coloca no quadro " + quadros.get(0).getId() + "\n"
 					+ this.printFreeFrames() + disk.printNotFinished());
 
@@ -164,7 +163,7 @@ public class Memory extends Vector<Process> {
 	// }
 
 	public String printFreeFrames() {
-		String str = "";
+		String str = "\n";
 		for (Frame frame : quadros)
 			if (frame.getPage() == null)
 				str += new SimpleDateFormat("HH:mm:ss").format(new Date()) + green + ".	O quadro " + frame.getId()

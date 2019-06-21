@@ -76,8 +76,8 @@ public class Disk extends Vector<Process> {
 	}
 
 	public String printNotFinished() {
-		String str = "";
-		for (Process process : readyBuffer) {
+		String str = "\n";
+		for (Process process : readyBuffer.getAll()) {
 			if (process.getTb() > 0)
 				str += new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + process.getId() + ":\n\n";
 			for (PageTable a : process.getPageTable()) {
@@ -95,8 +95,9 @@ public class Disk extends Vector<Process> {
 							+ "	Bit referencia: " + a.getReferenceBit() + "\n";
 				}
 			}
-
 		}
+
+		str += "\n";
 		return str;
 	}
 

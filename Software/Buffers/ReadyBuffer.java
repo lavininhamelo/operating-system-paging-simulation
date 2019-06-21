@@ -13,17 +13,17 @@ public class ReadyBuffer extends Vector<Process> {
 	 * Grupo para alocação dos processos prontos para serem alocados na CPU.
 	 */
 	private static Vector<Process> readyBuffer;
- 
+
 	public ReadyBuffer() {
 		readyBuffer = new Vector<>();
 	}
 
 	@Override
-	public boolean add(Process process) {
+	public synchronized boolean add(Process process) {
 		return readyBuffer.add(process);
 	}
 
-	public Vector<Process> getAll() {
+	public synchronized Vector<Process> getAll() {
 		return readyBuffer;
 	}
 
@@ -38,10 +38,8 @@ public class ReadyBuffer extends Vector<Process> {
 	}
 
 	@Override
-	public boolean remove(Object o) {
+	public synchronized boolean remove(Object o) {
 		return readyBuffer.remove(o);
 	}
-
-
 
 }
