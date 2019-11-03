@@ -1,11 +1,10 @@
 # Operating system paging simulation - JAVA
 
-### Simulation of a system with demand pagination with global frame allocation, second chance page replacement algorithm, and CPU Round-Robin mutual exclusion.
+
+## Simulation of a system with demand pagination with global frame allocation, second chance page replacement algorithm, and CPU Round-Robin mutual exclusion.
 
 
-
-
-#### Project Specifications
+### Project Specifications
 
 - System has the following hardware features: Memory, Disk, CPU, everything connected by a bus.
 
@@ -58,7 +57,8 @@
 
 - During system simulation, the system time is used as a time stamp to show modification or occurrence of the following events, where **id** is the id of the process whose action is being displayed, **idpage** is the id of the page being replaced or brought from the disk, and idframe and the frame in which a page is being placed or taken from a victim page.
 
-#### How to execute
+
+### How to execute
 
 Compile the class Start.java
 
@@ -80,3 +80,12 @@ The the input parameter values must be made via the command line using positive 
 An example of input parameter values is:
 
       345    5    3    2       1 5 5 15        0 7 1 5        2 6 2 10
+
+### Authors
+
+- **Lavínia Melo** - [GitHub](https://github.com/lavininhamelo)
+- **Bianca Barreto** - [GitHub](https://github.com/itsbibsbarreto)
+
+### License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
