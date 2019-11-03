@@ -60,6 +60,19 @@
 
 #### How to execute
 
+Compile the class Start.java
+
+Execute it with the following arguments:
+    - memory size,
+    - number of cases,
+    - time quantum.
+
+For each process (defined in the number of processes), pass:
+    - process id,
+    - process time,
+    - time of arrival,
+    - burst time.
+
 The the input parameter values must be made via the command line using positive integers, separated by space in the following format.
 
   __seed__ __nframes__ __n__ __tq__ (data list for each process __id__ __np__ __tc__ __tb__).
