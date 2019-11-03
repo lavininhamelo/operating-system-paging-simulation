@@ -7,7 +7,7 @@
 
 #### Project Specifications
 
-- System has the following hardware features: memory, disk, CPU, everything connected by a bus.
+- System has the following hardware features: Memory, Disk, CPU, everything connected by a bus.
 
 - In this system, the CPU has a single core.
 
@@ -50,11 +50,11 @@
     1. If there is a free frame, then Pager allocates it to contain the requested **idpagepk** page, reads the requested page from disk, updates the page table and free frame list, and warns the Dispatcher.
     2. Otherwise, Pager uses the second chance page replacement algorithm considering global frame allocation to replace the page of a frame, reads the requested page from disk, and properly changes both the page table for the victim page idpageidvictim of the victim case **iidvictim** as to the page table referring to the page that was contemplated, and warns the Dispatcher.
  
-- The npagefaults variable counts the number of page fault occurrences.
+- The **npagefaults** variable counts the number of page fault occurrences.
 
 - When an **id** process has already run for tbid seconds, it is removed from the ready queue, and all frames allocated to the **id** process go back to the free frame list and **pagetableid** is destroyed.
 
-- The Process Builder(Creator), Timer, CPU Round-Robin Scheduler, Dispatcher, and Pager components should be implemented as threads that communicate by shared memory with mutual exclusion guarantee where appropriate, especially when accessing the ready queue and List of free frames.
+- The Process Builder(Creator), Timer, CPU Round-Robin Scheduler, Dispatcher, and Pager components **are be implemented as threads** that communicate by shared memory with mutual exclusion guarantee where appropriate, especially when accessing the ready queue and List of free frames.
 
 - During system simulation, the system time is used as a time stamp to show modification or occurrence of the following events, where **id** is the id of the process whose action is being displayed, **idpage** is the id of the page being replaced or brought from the disk, and idframe and the frame in which a page is being placed or taken from a victim page.
 
