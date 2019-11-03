@@ -8,16 +8,41 @@ public class Frame {
   /**
    * Identificação.
    */
+
   private int id;
 
   /**
    * Página do frame.
    */
+
   private Page page;
+
+  /**
+   * Bit de Refencia
+   */
+
+  private boolean reference;
+
+  public boolean isReference() {
+    return reference;
+  }
 
   public Frame(int id) {
     this.id = id;
-    this.page = new Page();
+    this.reference = false;
+    this.page = null;
+  }
+
+  public void setReference(boolean reference) {
+    this.reference = reference;
+  }
+
+  public boolean getReference() {
+    return this.reference;
+  }
+
+  public void setId(int id) {
+    this.id = id;
   }
 
   public int getId() {

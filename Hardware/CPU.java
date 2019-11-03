@@ -29,13 +29,8 @@ public class CPU {
 	/**
 	 * Recebe e busca o proximo processo a ser alocado na CPU.
 	 */
-	public void setIdProcess(int idPage) {
-		this.idPage = idPage;
-		page = memory.getProcessPage(this.idPage);
-	}
-
-	public void setProcess(Process process) {
-		this.process = process;
+	public void setProcess(Process paramProcess) {
+		process = paramProcess;
 	}
 
 	/**

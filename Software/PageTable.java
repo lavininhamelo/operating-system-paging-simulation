@@ -8,13 +8,8 @@ public class PageTable {
   /**
    * Identificação da página.
    */
-  private int pageId;
+  private Page page;
 
-  /**
-   * Identificação da página.
-   */
-  private FramePageTable framePageTable;
-  
   /**
    * Bit de Refencia
    */
@@ -27,25 +22,14 @@ public class PageTable {
 
   private boolean validInvalidBit;
 
-  /**
-   * Contador para percorrer os Frames.
-   */
-  private int count;
+  private int frameId;
 
+  public PageTable(int pageId, int processId) {
 
-  public PageTable(int pageId) {
-    this.pageId = pageId;
+    this.page = new Page(pageId, processId);
     this.referenceBit = false;
     this.validInvalidBit = false;
 
-  }
-
-  public void setPageId(int pageId) {
-    this.pageId = pageId;
-  }
-
-  public int getPageId() {
-    return this.pageId;
   }
 
   public void setValidInvalidBit(boolean validInvalidBit) {
@@ -64,5 +48,20 @@ public class PageTable {
     return this.referenceBit;
   }
 
+  public void setFrameId(int frameId) {
+    this.frameId = frameId;
+  }
+
+  public int getFrameId() {
+    return this.frameId;
+  }
+
+  public void setPage(Page page) {
+    this.page = page;
+  }
+
+  public Page getPage() {
+    return this.page;
+  }
 
 }

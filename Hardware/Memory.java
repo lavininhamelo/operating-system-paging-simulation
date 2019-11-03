@@ -1,10 +1,13 @@
 package Hardware;
 
+import Software.Frame;
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
 import java.util.Vector;
 
+import Software.Page;
+import Software.PageTable;
 import Software.Process;
 import Software.Page;
 import Software.Frame;
@@ -13,29 +16,55 @@ import Software.Frame;
  * Responsável por gerenciar os processos que serão utilizados posteriormente
  * pela CPU.
  */
-public class Memory extends Vector<Frame> {
+public class Memory extends Vector<Process> {
+
+	public static final String reset = "\u001B[0m";
+	public static final String red = "\u001B[31m";
+	public static final String blue = "\u001B[34m";
+	public static final String green = "\u001B[32m";
+	public static final String yellow = "\u001b[33m";
 
 	/**
 	 * Número de frames.
 	 */
-	private static int nframes;
+	// private static int tmp;
+
+	/**
+	 * Tamanho da memória.
+	 */
+	// private static int nframes;
 
 	/**
 	 * Grupo para alocação e manipulação dos frames na Memória.
 	 */
-	private static Vector<Frame> storage;
+	// private static int tmpAllocated;
+
+	/**
+	 * Contador de page faults.
+	 */
+	private int countPageFaults;
 
 	/**
 	 * Comunicação com o Disco.
 	 */
 	private Disk disk;
 
+	/**
+	 * Grupo para alocação e manipulação dos processos na Memória.
+	 */
+	// private static Vector<Partition> storage;
+
+	private static Vector<Frame> quadros;
+
 	public Memory(int nframes) {
-		this.nframes = nframes;
-		this.storage = new Vector<>();
+		// this.nframes = nframes;
+		// this.storage = new Vector<>();
+		// this.storage.add(new Partition(1, tmp));
+		this.countPageFaults = 0;
+		quadros = new Vector<Frame>();
 
 		for (int i = 0; i < nframes; i++) {
-			storage.add(new Frame(i));
+			quadros.add(new Frame(i));
 		}
 	}
 
@@ -50,108 +79,138 @@ public class Memory extends Vector<Frame> {
 		disk.add(page);
 	}
 
-	/**
-	 * Aloca nova página de processo na memória.
-	 */
-	public void addPageProcess(Page page) {
+	public synchronized void freeFremes(Process p) {
+		for (PageTable pt : p.getPageTable()) {
+			for (Frame f : quadros) {
+				if (f.getId() == pt.getFrameId()) {
+					f.setPage(null);
+					f.setReference(false);
+				}
 
-		// boolean allocatedProcess = false;
-
-		// while (!allocatedProcess) {
-
-		// Vector<Partition> emptyPartitions = new Vector<>();
-
-		// storage.forEach(partition -> {
-		// if (partition.getProcess() == null)
-		// if (partition.getSize() >= process.getTp())
-		// emptyPartitions.add(partition);
-		// });
-
-		// if (!emptyPartitions.isEmpty()) {
-
-		// System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-		// + ". Pager percebe que há espaço " + process.getId() + " na
-		// memória");
-
-		// Partition partition = emptyPartitions.firstElement();
-		// int indexPartition = storage.indexOf(partition);
-
-		// Partition emptySpace = new Partition(process.getTp() + 1,
-		// partition.getEnd());
-		// partition.setEnd(process.getTp());
-		// partition.setProcess(process);
-
-		// storage.remove(indexPartition);
-		// storage.add(indexPartition, partition);
-		// storage.add(indexPartition + 1, emptySpace);
-
-		// allocatedProcess = true;
-		// }
-
-		// else {
-
-		// System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-		// + ". Swapper percebe que não há espaço ao processo " + process.getId() + " na
-		// memória");
-
-		// Vector<Partition> allocatedPartitions = new Vector<>();
-
-		// storage.forEach(partition -> {
-		// if (partition.getProcess() != null) {
-		// allocatedPartitions.add(partition);
-		// }
-		// });
-
-		// Process processBackup = allocatedPartitions.firstElement().getProcess();
-
-		// allocatedPartitions.firstElement().setProcess(null);
-
-		// writeInDisk(processBackup);
-
-		// System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".
-		// Swapper retirou o processo "
-		// + processBackup.getId() + " para liberar espaço na memória, e o enviou ao
-		// disco");
-
-		// for (int i = 0; i < storage.size() - 1; i++) {
-		// if (storage.get(i).getProcess() == null && storage.get(i + 1).getProcess() ==
-		// null) {
-		// storage.get(i).setEnd(storage.get(i + 1).getEnd());
-		// storage.remove(i + 1);
-		// break;
-		// }
-
-		// }
-		// }
-
-		// }
-
-	}
-
-	/**
-	 * Retorna a página alocado na memória especificada pelo parâmetro de entrada
-	 * 'idPage'.
-	 */
-	public Page getProcessPage(int idPage) {
-		for (Frame frame : storage) {
-			if (frame.getPage().getId() == idPage)
-				return frame.getPage();
+			}
 		}
 
-		return null;
 	}
+
+	/**
+	 * Aloca nova página na memória com Second Chance.
+	 */
+
+	public void addProcess(Process process, Page page) {
+		if (!quadros.firstElement().isReference() && quadros.firstElement().getPage() == null) {
+			System.out.println(
+					new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager percebe que há um quadro livre.");
+			this.countPageFaults++;
+			Frame f = quadros.remove(0);
+			f.setReference(true);
+			f.setPage(page);
+			quadros.add(f);
+
+			process.getPageTable(page).setReferenceBit(true);
+			process.getPageTable(page).setValidInvalidBit(true);
+			process.getPageTable(page).setFrameId(f.getId());
+			disk.setInvalidBit(f.getId(), page);
+			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager lê do disco a página "
+					+ page.getId() + " solicitada e o coloca no quadro " + f.getId());
+
+		} else {
+
+			while (quadros.firstElement().isReference()) {
+				Frame f = quadros.remove(0);
+				f.setReference(false);
+				disk.setFrames(process, f.getId());
+				quadros.add(f);
+			}
+			this.countPageFaults++;
+			if (quadros.get(0).getPage() == null) {
+				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
+						+ ".	Pager percebe que há um quadro livre.");
+				this.countPageFaults++;
+				Frame f = quadros.remove(0);
+				f.setReference(true);
+				f.setPage(page);
+				quadros.add(f);
+
+				process.getPageTable(page).setReferenceBit(true);
+				process.getPageTable(page).setValidInvalidBit(true);
+				process.getPageTable(page).setFrameId(f.getId());
+				disk.setInvalidBit(f.getId(), page);
+				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager lê do disco a página "
+						+ page.getId() + " solicitada e o coloca no quadro " + f.getId());
+
+			} else {
+				System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
+						+ ".	Pager percebe que não há quadros livres e substitui a página "
+						+ quadros.get(0).getPage().getId() + " na que está no quadro " + quadros.get(0).getId());
+				Frame f = quadros.remove(0);
+				// Process processBackup = this.getProcess(f.getPage().getIdProcess());
+				// System.out.println("----------------------------------------" +
+				// processBackup.getId());
+				writeInDisk(process);
+				f.setReference(true);
+				f.setPage(page);
+
+				// for (Frame frame : quadros) {
+				// frame.getPage()
+				// }
+
+				quadros.add(f);
+				process.getPageTable(page).setReferenceBit(true);
+				process.getPageTable(page).setValidInvalidBit(true);
+				process.getPageTable(page).setFrameId(f.getId());
+				disk.setInvalidBit(f.getId(), page);
+				System.out.print(new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Pager lê do disco a página "
+						+ page.getId() + " solicitada e o coloca no quadro " + f.getId() + "\n" + this.printFreeFrames()
+						+ disk.printNotFinished(process));
+			}
+		}
+	}
+
+	/**
+	 * Retorna o processo alocado na memória especificado pelo parâmetro de entrada
+	 * 'idProcess'.
+	 */
+	// public Process getProcess(int idProcess) {
+
+	// for (Partition partition : storage) {
+	// if (partition.getProcess().getId() == idProcess)
+	// return partition.getProcess();
+
+	// }
+
+	// return null;
+
+	// }
 
 	/**
 	 * Verifica se a página está alocada na memória.
 	 */
-	public boolean contains(Page page) {
-		for (Frame frame : storage) {
-			if (frame.getPage() != null)
-				if (frame.getPage().getId() == page.getId())
-					return true;
-		}
+	// public boolean contains(Process process) {
+	// for (Frame frame : quadros) {
+	// if (frame.getPage() != null)
+	// if (frame.getPage().getIdProcess() == process.getId())
+	// return true;
+	// }
 
-		return false;
+	// return false;
+	// }
+
+	public String printFreeFrames() {
+		String str = "\n";
+		for (Frame frame : quadros)
+			if (frame.getPage() == null)
+				str += new SimpleDateFormat("HH:mm:ss").format(new Date()) + green + ".	O quadro " + frame.getId()
+						+ " está livre.\n" + reset;
+			else
+				str += new SimpleDateFormat("HH:mm:ss").format(new Date()) + yellow + ".	O quadro " + frame.getId()
+						+ " está ocupado.\n" + reset;
+
+		return str;
+	}
+
+	public void printPageFaults() {
+		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + red
+				+ ".	O número total de page faults foi " + this.countPageFaults + ". " + reset);
 	}
 
 	public void secondChance(Vector<Frame> storage) {

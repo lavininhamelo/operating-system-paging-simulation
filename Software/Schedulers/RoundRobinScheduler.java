@@ -1,5 +1,8 @@
 package Software.Schedulers;
 
+import Hardware.Memory;
+import Hardware.Disk;
+
 import Software.Buffers.ReadyBuffer;
 import Software.Dispatcher;
 import Software.Process;
@@ -12,10 +15,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Responsávelo por realizar o escalonamento dos processos que serão alocados na CPU.
+ * Responsávelo por realizar o escalonamento dos processos que serão alocados na
+ * CPU.
  */
-public class RoundRobinScheduler extends Thread implements Runnable{
-
+public class RoundRobinScheduler extends Thread implements Runnable {
+	public static final String reset = "\u001B[0m";
+	public static final String red = "\u001B[31m";
+	public static final String blue = "\u001B[34m";
+	public static final String green = "\u001B[32m";
 	/**
 	 * Time quantum.
 	 */
@@ -25,6 +32,16 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 	 * Comunicação com o ReadyBuffer.
 	 */
 	private static ReadyBuffer readyBuffer;
+
+	/**
+	 * Comunicação com a memória.
+	 */
+	private Memory memory;
+
+	/**
+	 * Comunicação com o disco.
+	 */
+	private Disk disk;
 
 	/**
 	 * Comunicação com o Dispatcher.
@@ -56,20 +73,25 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 	 */
 	private String statusProcess;
 
-	public RoundRobinScheduler(int tq, MonitorRoundRobinDispatcher monitorDispatcher, MonitorRoundRobinTimer monitorTimer) {
+	public RoundRobinScheduler(int tq, MonitorRoundRobinDispatcher monitorDispatcher,
+			MonitorRoundRobinTimer monitorTimer) {
 		this.tq = tq;
 		readyBuffer = new ReadyBuffer();
 		this.monitorDispatcher = monitorDispatcher;
 		this.monitorTimer = monitorTimer;
 		statusProcess = "";
 	}
-	
-	public void setDispatcher(Dispatcher dispatcher){
+
+	public void setDispatcher(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 	}
 
 	public void setTimer(Timer timer) {
 		this.timer = timer;
+	}
+
+	public void setMemory(Memory memory) {
+		this.memory = memory;
 	}
 
 	public int getTq() {
@@ -84,12 +106,18 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 		return process;
 	}
 
+	public void setDisk(Disk disk) {
+		this.disk = disk;
+	}
+
 	public void setStatusProcess(String statusProcess) {
 		this.statusProcess = statusProcess;
 	}
 
 	/**
-	 * Verifica se há processos na fila de prontos. Caso positivo, o método busca e remove o processo que possui menor CPU burst time da fila, que será o processo selecionado para ser alocado na CPU.
+	 * Verifica se há processos na fila de prontos. Caso positivo, o método busca e
+	 * remove o processo que possui menor CPU burst time da fila, que será o
+	 * processo selecionado para ser alocado na CPU.
 	 */
 	public void chooseProcess() {
 
@@ -107,7 +135,8 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 	}
 
 	/**
-	 * Envia o processo escolhido para o dispatcher solicitando que o processo seja alocado na CPU.
+	 * Envia o processo escolhido para o dispatcher solicitando que o processo seja
+	 * alocado na CPU.
 	 */
 	private void sendProcessToDispatcher() {
 
@@ -116,7 +145,8 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 	}
 
 	/**
-	 *  Verifica se o processo ainda possui Time CPU Burst e caso positivo retorna o processo para a fila de prontos.
+	 * Verifica se o processo ainda possui Time CPU Burst e caso positivo retorna o
+	 * processo para a fila de prontos.
 	 */
 	private void returnProcessToReadyBuffer() {
 
@@ -124,12 +154,15 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 
 			readyBuffer.add(process);
 
-		else
+		else {
+			if (process.getTb() <= 0)
+				memory.freeFremes(process);
 
-			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-					+ ".	Processo " + process.getId()
-					+ " terminou sua execução");
+			System.out.print(new SimpleDateFormat("HH:mm:ss").format(new Date()) + green + ".	Processo "
+					+ process.getId() + " terminou sua execução." + reset + "\n" + memory.printFreeFrames()
+					+ disk.printNotFinished(process));
 
+		}
 		process = null;
 
 	}
@@ -152,7 +185,7 @@ public class RoundRobinScheduler extends Thread implements Runnable{
 	 *
 	 * Para cada ciclo de tempo deverá ser realizado os seguintes processos:
 	 *
-	 * 	- Verificação da fila de prontos para alocação de novos processos na CPU.
+	 * - Verificação da fila de prontos para alocação de novos processos na CPU.
 	 *
 	 */
 	public void run() {

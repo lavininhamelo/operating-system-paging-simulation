@@ -19,11 +19,11 @@ public class ReadyBuffer extends Vector<Process> {
 	}
 
 	@Override
-	public boolean add(Process process) {
+	public synchronized boolean add(Process process) {
 		return readyBuffer.add(process);
 	}
 
-	public Vector<Process> getAll() {
+	public synchronized Vector<Process> getAll() {
 		return readyBuffer;
 	}
 
@@ -38,10 +38,8 @@ public class ReadyBuffer extends Vector<Process> {
 	}
 
 	@Override
-	public boolean remove(Object o) {
+	public synchronized boolean remove(Object o) {
 		return readyBuffer.remove(o);
 	}
-
-
 
 }

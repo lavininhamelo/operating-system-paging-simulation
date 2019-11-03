@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.Collection;
 import java.util.Vector;
 
+import Hardware.Disk;
+
 /**
  * Responsável por construir processos e adicioná-los na fila de entrada.
  */
@@ -19,7 +21,6 @@ public class ProcessCreator extends Thread {
 	 */
 	private static InputBuffer inputBuffer;
 
-
 	/**
 	 * Comunicação com o ReadyBuffer.
 	 */
@@ -29,6 +30,7 @@ public class ProcessCreator extends Thread {
 	 * Comunicação com o Process.
 	 */
 	private Process process;
+	private Disk disk;
 
 	/**
 	 * Grupo para alocação e manipulação dos processos.
@@ -56,15 +58,18 @@ public class ProcessCreator extends Thread {
 		readyBuffer.add(process);
 
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Criador de processos criou o processo " + process.getId()
-				+ " e o colocou na fila de prontos");
+				+ ".	Criador de processos criou o processo " + process.getId() + " e o colocou na fila de prontos");
 
 		processosCriados.add(process);
+		disk.add(process);
+	}
+
+	public void setDisk(Disk disk) {
+		this.disk = disk;
 	}
 
 	@Override
 	public void run() {
-
 		int segundos = 0;
 
 		while (processosParaCriar.size() != processosCriados.size()) {
@@ -84,9 +89,6 @@ public class ProcessCreator extends Thread {
 			}
 
 			segundos++;
-
 		}
-
 	}
-
 }

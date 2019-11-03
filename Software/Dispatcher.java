@@ -22,6 +22,8 @@ public class Dispatcher extends Thread {
 	 */
 	private RoundRobinScheduler roundRobinScheduler;
 
+	private Random ger = new Random();
+
 	/**
 	 * Comunicação com o Pager.
 	 */
@@ -125,13 +127,15 @@ public class Dispatcher extends Thread {
 	 * freeUpCPU().
 	 *
 	 */
-	public void dispatchPage() {
-		this.page = process.getPageById(this.chooseProcessPage(process));
+
+	public void dispatchProcess(Page page) {
 
 		// Verifica se a página do processo está na Pagetabe.
+
 		if (process.isPageValid(page)) {
+
 			System.out.println(
-					new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Despachante percebe que a pagina "
+					new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Despachante percebe que a página "
 							+ page.getId() + " do processo " + process.getId() + " está na memória");
 
 			freeUpCPU();
@@ -142,18 +146,20 @@ public class Dispatcher extends Thread {
 
 		} else {
 			System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-					+ ".	Despachante percebe que a pagina " + page.getId() + " do processo " + process.getId()
+					+ ".	Despachante percebe que a página " + page.getId() + " do processo " + process.getId()
 					+ " não está na memória e solicita que o Pager traga " + page.getId() + " à memória");
 
-			requestTransferToMemory(page);
+			requestTransferToMemory(process, page);
+
 		}
 	}
 
 	/**
 	 * Solicita ao Pager a transferência da página do disco para a memória.
 	 */
-	public void requestTransferToMemory(Page page) {
-		pager.setRequestForTransferOfPage(page);
+	public void requestTransferToMemory(Process process, Page page) {
+
+		pager.setRequestForTransferOfProcess(process, page);
 
 		synchronized (monitorPager) {
 			try {
@@ -164,34 +170,37 @@ public class Dispatcher extends Thread {
 		}
 
 		System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date())
-				+ ".	Despachante é avisado pelo Pager que a pagina " + page.getId() + " do processo "
+				+ ".	Despachante é avisado pelo Pager que a página " + page.getId() + " do processo "
 				+ process.getId() + " esta no quadro " + process.getIdFrame(page.getId()));
 
-		dispatchPage();
+		dispatchProcess(page);
+
 	}
 
 	/**
 	 * Calcula uma página aleatória do processo.
 	 */
 	public int chooseProcessPage(Process process) {
-		int range = (process.getNp() - 1) + 1;
-		return this.seed % ((int) (Math.random() * range));
+		return ger.nextInt(seed);
 	}
 
 	/**
-	 * Reinicia o Timer e libera a CPU passando a identificação da próxima página à
-	 * CPU.
+	 * Reinicia o Timer e libera a CPU passando a identificação do próximo processo
+	 * à CPU.
 	 */
 	private void freeUpCPU() {
 		timer.setTimer(roundRobinScheduler.getTq());
-		cPU.setIdProcess(process.getId());
+		cPU.setProcess(process);
+
 	}
 
 	/**
 	 * Notifica o timer que novo processo foi alocado na CPU.
 	 */
 	private void notifyTimer() {
+
 		synchronized (monitorTimer) {
+
 			monitorTimer.notify();
 		}
 	}
@@ -199,7 +208,9 @@ public class Dispatcher extends Thread {
 	@Override
 	public void run() {
 		while (!statusRoundRobinScheduler.equals("concluded")) {
+
 			synchronized (monitorRoundRobin) {
+
 				try {
 					monitorRoundRobin.wait();
 				} catch (InterruptedException e) {
@@ -208,7 +219,8 @@ public class Dispatcher extends Thread {
 			}
 
 			if (process != null) {
-				dispatchPage();
+				this.page = process.getPageById(this.chooseProcessPage(process));
+				dispatchProcess(this.page);
 				process = null;
 
 				notifyTimer();

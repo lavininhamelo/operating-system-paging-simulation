@@ -1,10 +1,13 @@
 package Hardware;
 
 import java.util.Vector;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
-import Software.Process;
 import Software.Page;
-import Software.Frame;
+import Software.PageTable;
+import Software.Process;
+import Software.Buffers.ReadyBuffer;
 
 /**
  * Responsável por armazenar e gerenciar os processos que não poderam ser
@@ -12,10 +15,18 @@ import Software.Frame;
  */
 public class Disk extends Vector<Page> {
 
+	public static final String reset = "\u001B[0m";
+	public static final String red = "\u001B[31m";
+	public static final String blue = "\u001B[34m";
+	public static final String green = "\u001B[32m";
+	public static final String yellow = "\u001b[33m";
+
 	/**
 	 * Comunicação com a Memória.
 	 */
 	private Memory memory;
+
+	private static ReadyBuffer readyBuffer;
 
 	/**
 	 * Grupo para alocação e manipulação das páginas de processos no Disco.
@@ -23,11 +34,16 @@ public class Disk extends Vector<Page> {
 	private static Vector<Page> storage;
 
 	public Disk() {
-		this.storage = new Vector<>();
+		storage = new Vector<Process>();
+		readyBuffer = new ReadyBuffer();
 	}
 
 	public void setMemory(Memory memory) {
 		this.memory = memory;
+	}
+
+	public void setReadyBuffer(ReadyBuffer readyBuffer) {
+		this.readyBuffer = readyBuffer;
 	}
 
 	/**
@@ -35,13 +51,12 @@ public class Disk extends Vector<Page> {
 	 * transferido é especificado pelo parâmetro de entrada ‘idProcess’ deste
 	 * método.
 	 */
-	public void writeInMemory(int idProcess) {
+	public void writeInMemory(Process process, Page page) {
 
-		Process process = getProcess(idProcess);
-
-		memory.addPageProcess(process);
-
+		// if (process != null) {
+		memory.addProcess(process, page);
 		storage.remove(process);
+		// }
 
 	}
 
@@ -60,14 +75,95 @@ public class Disk extends Vector<Page> {
 		return null;
 	}
 
+	public String printNotFinished(Process p) {
+		String str = "\nTabela de paginas:";
+		if (p.getTb() > 0) {
+			if (p.getTb() > 0 && !str.contains("Processo " + p.getId()))
+				str += "\n" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + p.getId()
+						+ ":\n\n";
+			for (PageTable a : p.getPageTable()) {
+				str += "\t\tidPagina: " + a.getPage().getId() + "	Bit Valido/Invalido: " + a.getValidInvalidBit()
+						+ "	Bit referencia: " + a.getReferenceBit() + "\n";
+			}
+		}
+
+		for (
+
+		Process process : readyBuffer.getAll()) {
+			if (process.getTb() > 0)
+				str += "\n" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + process.getId()
+						+ ":\n\n";
+			for (PageTable a : process.getPageTable()) {
+				str += "\t\tidPagina: " + a.getPage().getId() + "	Bit Valido/Invalido: " + a.getValidInvalidBit()
+						+ "	Bit referencia: " + a.getReferenceBit() + "\n";
+			}
+
+		}
+
+		for (Process process : storage) {
+			if (process.getTb() > 0 && !str.contains("Processo " + process.getId())) {
+				str += "\n" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + ".	Processo " + process.getId()
+						+ ":\n\n";
+				for (PageTable a : process.getPageTable()) {
+					str += "\t\tidPagina: " + a.getPage().getId() + "	Bit Valido/Invalido: " + a.getValidInvalidBit()
+							+ "	Bit referencia: " + a.getReferenceBit() + "\n";
+				}
+			}
+		}
+
+		str += "\n";
+		return str;
+	}
+
 	/**
 	 * Aloca uma nova página no disco.
 	 */
 	@Override
-	public boolean add(Page page) {
-
-		return storage.add(page);
-
+	public boolean add(Process process) {
+		return storage.add(process);
 	}
 
+	public void setFrames(Process p, int idFrame) {
+		for (PageTable pt : p.getPageTable()) {
+			if (idFrame == pt.getFrameId()) {
+				pt.setReferenceBit(false);
+			}
+		}
+		for (Process process : storage) {
+			for (PageTable pt : process.getPageTable()) {
+				if (idFrame == pt.getFrameId()) {
+					pt.setReferenceBit(false);
+				}
+			}
+		}
+		for (Process process : readyBuffer.getAll()) {
+			for (PageTable pt : process.getPageTable()) {
+				if (idFrame == pt.getFrameId()) {
+					pt.setReferenceBit(false);
+				}
+			}
+		}
+	}
+
+	public void setInvalidBit(int idFrame, Page page) {
+
+		for (Process p : storage) {
+			for (PageTable a : p.getPageTable()) {
+				if (a.getFrameId() == idFrame && page.getIdProcess() != a.getPage().getIdProcess()
+						&& page.getId() != a.getPage().getId()) {
+					a.setValidInvalidBit(false);
+				}
+			}
+
+		}
+		for (Process p : readyBuffer.getAll()) {
+			for (PageTable a : p.getPageTable()) {
+				if (a.getFrameId() == idFrame && page.getIdProcess() != a.getPage().getIdProcess()
+						&& page.getId() != a.getPage().getId()) {
+					a.setValidInvalidBit(false);
+				}
+			}
+
+		}
+	}
 }
