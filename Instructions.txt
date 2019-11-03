@@ -1,0 +1,14 @@
+Instructions:
+
+Compile the class Start.java
+
+Execute it with the following arguments:
+    - memory size;
+    - number of cases;
+    - time quantum;
+
+For each process (defined in the number of processes), pass:
+    - process id;
+    - process time;
+    - time of arrival;
+    - burst time.
